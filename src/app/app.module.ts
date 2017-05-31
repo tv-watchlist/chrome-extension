@@ -5,10 +5,20 @@ import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { OptionsComponent } from './options/options.component';
+import { BackgroundComponent } from './background/background.component';
+import { PopupComponent } from './popup/popup.component';
+import { NotFoundComponent } from './not-found.component';
+
+import { PageQueryGuard } from './page-query.guard';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BackgroundComponent,
+    OptionsComponent,
+    PopupComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -16,7 +26,9 @@ import { AppComponent } from './app.component';
     HttpModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    PageQueryGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

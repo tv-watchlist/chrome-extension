@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+    "name": "TV Watchlist",
+    "description": "Track favorite TV shows and episodes by creating a personal WatchList.",
+    "version": "3.0.0",
+    "browser_action": {
+        "default_title": "TV WatchList v3.0.0",
+        "default_popup": "index.html?page=popup"
+    },
+    "options_page": "index.html?page=options",
+    "background": {
+        "page": "index.html?page=background",
+        "persistent": false
+    },
+    "permissions": [
+        "http://*.tvrage.com/*",
+        "http://*.thetvdb.com/*",
+        "https://*.dropbox.com/*",
+        "http://*.tvmaze.com/*",
+        "notifications",
+        "storage",
+        "alarms"
+    ],
+    "optional_permissions": [ "clipboardRead", "clipboardWrite" ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://www.facebook.com https://api-content.dropbox.com; object-src 'self'",
+    "offline_enabled": true,
+    "web_accessible_resources": [
+        "assets/css/*",
+        "assets/js/*",
+        "assets/fonts/*",
+        "assets/img/*"
+    ]
+}

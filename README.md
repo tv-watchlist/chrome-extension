@@ -2,6 +2,18 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.6.
 
+Below was used to generate the scaffold:
+ng new chrome-extension --style=scss --skip-tests=true --prefix=tvq --routing=true
+
+According to [Angular CLI Stories](https://github.com/angular/angular-cli/wiki/stories-disk-serve)
+ng build --watch
+lite-server --baseDir="dist" (node_modules/.bin/lite-server --baseDir="dist")
+
+reference extension resources
+https://medium.com/@_JoshSommer/build-a-simple-emoji-chrome-extension-with-angular-cli-84937a1ca640
+https://www.sitepoint.com/chrome-extension-angular-2/
+https://cito.github.io/blog/web-ext-with-angular/
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule , APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -11,7 +11,8 @@ import { PopupComponent } from './popup/popup.component';
 import { NotFoundComponent } from './not-found.component';
 
 import { PageQueryGuard } from './page-query.guard';
-
+import { LoggerService } from './logger.service';
+import { IDXDataDefinitionService, IDXDataManipulationService } from './indexed-db.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +28,18 @@ import { PageQueryGuard } from './page-query.guard';
     AppRoutingModule
   ],
   providers: [
-    PageQueryGuard
+    PageQueryGuard,
+    LoggerService,
+    IDXDataDefinitionService,
+    IDXDataManipulationService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (dml: IDXDataManipulationService) => () => {
+        return dml.setDB();
+      },
+      deps: [IDXDataManipulationService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

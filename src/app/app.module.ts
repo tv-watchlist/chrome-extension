@@ -34,10 +34,12 @@ import { IDXDataDefinitionService, IDXDataManipulationService } from './indexed-
     IDXDataManipulationService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (dml: IDXDataManipulationService) => () => {
-        return dml.setDB();
+      useFactory: (ddl: IDXDataDefinitionService, dml: IDXDataManipulationService) => () => {
+        return ddl.Open().then(db => {
+           return dml.setDB(db);
+        });
       },
-      deps: [IDXDataManipulationService],
+      deps: [IDXDataDefinitionService, IDXDataManipulationService],
       multi: true
     }
   ],

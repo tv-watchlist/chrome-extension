@@ -298,27 +298,11 @@ export interface RangeValues {
 export class IDXDataManipulationService {
   private db: IDBDatabase;
   constructor(private logger: LoggerService) { }
-  public setDB(db?: IDBDatabase) {
-    if (!db) {
-      return (new IDXDataDefinitionService(this.logger)).Open().then( (_db: IDBDatabase) => {
-            console.log('setting db');
-            this.db = _db;
-            return;
-          });
-    } else {
+  public setDB(db: IDBDatabase) {
       this.db = db;
+      console.log('setting db');
       Promise.resolve();
-    }
   }
-  // constructor(private logger: LoggerService, private ddl: IDXDataDefinitionService) { }
-
-  // public setDB() {
-  //   return this.ddl.Open().then( (db: IDBDatabase) => {
-  //     console.log('setting db');
-  //     this.db = db;
-  //     return db;
-  //   });
-  // }
 
 /**
  * for '>= && <=' IDBKeyRange.bound(searchTerm, searchTerm + '\uffff')

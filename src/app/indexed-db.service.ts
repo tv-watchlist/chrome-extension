@@ -11,7 +11,13 @@ const global = {
 export class IDXSchema {
   dbName: string;
   version: number;
+  /**
+   * version integer starting from 1
+   */
   revision: {[version: number]: IDXTable[]};
+  /**
+   * seed data starting from version 1
+   */
   seedData?: {[version: number]: {[storeName: string]: any[]}};
 }
 
@@ -54,6 +60,25 @@ export class IDXIndex {
     multiEntry: boolean;
 }
 
+const TransactionType = {
+  READ_ONLY: 'readonly',
+  READ_WRITE: 'readwrite'
+};
+
+const CursorType = {
+  NEXT: 'next',
+  NEXT_NO_DUPLICATE: 'nextunique',
+  PREV: 'prev',
+  PREV_NO_DUPLICATE: 'prevunique'
+};
+
+export type Operator = '=='|'<'|'<='|'>'|'>='|'> && <'|'>= && <='|'> && <='|'>= && <';
+
+export interface RangeValues {
+  first: string;
+  second?: string;
+}
+
 @Injectable()
 export class IDXDataDefinitionService {
 
@@ -66,40 +91,6 @@ export class IDXDataDefinitionService {
     console.debug('new IDXDataDefinitionService called');
   }
 
-  getSchema(): IDXSchema {
-    // https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
-    // https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/
-    // schema structure
-    return {
-      'dbName': 'testDB',
-      'version': 1,
-      'revision': {
-       1: [{'name': 'settings',
-          'operation': 'CREATE',
-          'primaryField': 'Name',
-          'autoIncrement': false,
-          'indexes': null,
-        }]
-      },
-      'seedData': {1:
-                    {'settings':
-                      [{'Name': 'update_time', 'Value': (new Date()).getTime() } // will be used for show update
-                      , {'Name': 'enable_notification', 'Value': 1}
-                      , {'Name': 'default_country', 'Value': 'US'}
-                      , {'Name': 'override_episode_summary_link', 'Value': ''}
-                      , {'Name': 'ui', 'Value': null}
-                      , {'Name': 'badge_flag', 'Value': 'shows'}
-                      , {'Name': 'shows_order', 'Value': 'airdate'}
-                      , {'Name': 'animate_icon', 'Value': 1}
-                      , {'Name': 'compact_flag', 'Value': 0}
-                      , {'Name': 'enable_banner', 'Value': 0}
-                      , {'Name': 'data_structure_version', 'Value': 5}
-                      ]
-                    }
-                  }
-    };
-  }
-
   getIndexedDB() {
     if (!global.indexedDB) {
       throw new Error('Current browser does not support indexedDB.');
@@ -107,10 +98,12 @@ export class IDXDataDefinitionService {
     return global.indexedDB;
   }
 
-  Open(): Promise<IDBDatabase> {
+  Open(schema: IDXSchema): Promise<IDBDatabase> {
+    // https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+    // https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/
     return new Promise((resolve, reject) => {
       if (!this._schema) { // save schema in memmory
-        this._schema = this.getSchema();
+        this._schema = schema;
       }
 
       if (!this._schema) {
@@ -273,25 +266,6 @@ export class IDXDataDefinitionService {
       };
     });
   }
-}
-
-const TransactionType = {
-  READ_ONLY: 'readonly',
-  READ_WRITE: 'readwrite'
-};
-
-const CursorType = {
-  NEXT: 'next',
-  NEXT_NO_DUPLICATE: 'nextunique',
-  PREV: 'prev',
-  PREV_NO_DUPLICATE: 'prevunique'
-};
-
-export type Operator = '=='|'<'|'<='|'>'|'>='|'> && <'|'>= && <='|'> && <='|'>= && <';
-
-export interface RangeValues {
-  first: string;
-  second: string;
 }
 
 @Injectable()

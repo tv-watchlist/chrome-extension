@@ -13,11 +13,19 @@ export class OptionsComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.logger.log(this.title);
-    this.dml.FetchAll('settings').then(([list, storeName]) => {
-      this.List = list;
-      this.logger.log(this.List);
-    });
+
+    try {
+      const fetchResult = await this.dml.FetchAll('settings');
+      this.List = fetchResult[0];
+      this.logger.log('FetchAll', this.List);
+
+      const setResult = await this.dml.SetObj('settings', { 'Name': 'update_time', 'Value': (new Date()).getTime() });
+      this.logger.log('SetObj', setResult);
+
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }

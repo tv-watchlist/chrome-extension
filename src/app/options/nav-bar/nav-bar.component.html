@@ -1,0 +1,66 @@
+<nav class="navbar navbar-inverse navbar-toggleable-md fixed-top navbar-custom py-0">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand">
+    <img src="/assets/tv-watchlist-32.png" width="30" height="30" alt="TV Watchlist">
+  </a>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav mr-auto">
+      <!--<li class="nav-item pl-1" >
+        <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['show-manager']">
+          <i class="fa fa-tv"></i> Show Manager</a>
+      </li>
+      <li class="nav-item pl-1">
+        <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['highlights']">
+          <i class="fa fa-bolt"></i> Highlights</a>
+      </li>
+      <li class="nav-item pl-1" >
+        <a class="nav-link disabled" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['calendar']">
+          <i class="fa fa-calendar"></i> Calendar</a>
+      </li>
+      <li class="nav-item pl-1" >
+        <a class="nav-link disabled" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['listings']">
+          <i class="fa fa-list"></i> Listings</a>
+      </li>-->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          TV Watchlist
+        </a>
+        <div class="dropdown-menu p-0" style="font-size: 0.75rem;" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item px-3" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['show-manager']">
+            <i class="fa fa-tv"></i> Show Manager
+          </a>
+          <a class="dropdown-item px-3" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['highlights']">
+            <i class="fa fa-bolt"></i> Highlights
+          </a>
+          <a class="dropdown-item px-3" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['calendar']">
+            <i class="fa fa-calendar"></i> Calendar
+          </a>
+          <a class="dropdown-item px-3" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['listings']">
+            <i class="fa fa-list"></i> Listings
+          </a>
+        </div>
+      </li>
+      <li class="nav-item pl-1" >
+        <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['settings']">
+          <i class="fa fa-gear"></i> Settings</a>
+      </li>
+      <li class="nav-item pl-1" >
+        <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"[routerLink]="['help']">
+          <i class="fa fa-book"></i> Help
+       </a>
+      </li>
+      <li class="nav-item pl-1" >
+        <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"[routerLink]="['about']">
+          <i class="fa fa-twitter"></i> About
+       </a>
+      </li>
+      
+    </ul>
+    <form class="form-inline mt-2 mt-md-0">
+      <input class="form-control form-control-sm mr-sm-2" type="text" placeholder="Search">
+      <button class="btn btn-secondary my-2 my-sm-0 btn-sm" type="submit">Search</button>
+    </form>
+  </div>
+</nav>

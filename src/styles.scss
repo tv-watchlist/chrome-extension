@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'variables';
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+body {
+    // background-color: #222;
+    // color: #eee;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+}

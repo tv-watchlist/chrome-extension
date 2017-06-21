@@ -1,0 +1,8 @@
+<div class="showContainer" [ngStyle]="styleMap" (mouseenter)="menter()" (mouseleave)="mleave()">
+    <div [ngClass]="{'glass': !!bannerUrl,'noglass':!bannerUrl}" [style.minHeight.px]="compact ? '25':'65'">
+        <details> <!--open-->
+            <summary class="boldText">Running Shows Unseen</summary>
+            Episode summary 1 2 3
+        </details>
+    </div>
+</div>

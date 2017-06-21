@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-9">
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4" *ngIf="selectedGroup==='preferences'">
         <li class="list-group-item flex-column align-items-start">
           <h4>Preferences</h4>
           <p>Set your TV Watchlist preferences here</p> 
@@ -18,7 +18,7 @@
           <div class="d-flex w-100 justify-content-between">
             Notify me 
             <select name="notify_before" class="form-control-sm d-inline" [(ngModel)]="settings.notify_before" (ngModelChange)="Save('notify_before')">
-              <option value="">every day</option>
+              <option value="0">every day</option>
               <option value="5">before 5 mins</option>
               <option value="10">before 10 mins</option>
               <option value="15">before 15 mins</option>
@@ -56,7 +56,7 @@
         <li class="list-group-item justify-content-between">
           Limit to only current shows running:
           <select name="running_days_limit" class="form-control-sm d-inline" [(ngModel)]="settings.running_days_limit" (ngModelChange)="Save('running_days_limit')">
-              <option value="">None</option>
+              <option value="0">None</option>
               <option value="1">Today</option>
               <option value="2">Tomorrow</option>
               <option value="7">1 Week</option>
@@ -92,7 +92,7 @@
          Share your showList to your favorite social network <button class="btn btn-secondary btn-sm">Copy showlist to clipboard</button>
         </li>
       </ul>
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4" *ngIf="selectedGroup==='timezone'">
         <li class="list-group-item flex-column align-items-start">
           <h4>Timezone</h4>
           <p>All TV Show times with selected countries below will be effected
@@ -124,7 +124,7 @@
             </table>
         </li>
       </ul>
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4" *ngIf="selectedGroup==='backup-restore'">
         <li class="list-group-item flex-column align-items-start">
           <h4>Backup &amp; Restore</h4>
           <p>
@@ -144,7 +144,7 @@
           </label>
         </li>
       </ul>
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4" *ngIf="selectedGroup==='cloud-services'">
         <li class="list-group-item flex-column align-items-start">
           <h4>Cloud Services</h4>
           <p>Share same information between multiple computers by Syncing TV Watchlist data to cloud.
@@ -158,12 +158,12 @@
           <button class="btn btn-secondary btn-sm" id="dropbox_logout">Logout</button>
         </li>
       </ul>
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4" *ngIf="selectedGroup==='link-override'">
         <li class="list-group-item flex-column align-items-start">
           <h4>Link Override</h4>
           <p>You can use <a href='http://en.wikipedia.org/wiki/Bookmarklet' target="_blank">Bookmarklets</a>,
-          Or You can add customized link <br /> i.e: http://www.google.com/search?btnI=1&q={{'{show_name}'}}+official+website
-          https://codemirror.net/index.html
+          Or You can add customized link <br /> i.e: http://www.google.com/search?btnI=1&q={{'{show_name.slug()}'}}+official+website
+          <!--https://codemirror.net/index.html-->
           </p>
           <p>
             <span class="boldText">Placeholders:</span>({{'{show_name}'}} {{'{season}'}} {{'{number}'}} {{'{counter}'}} {{'{title}'}} {{'{airdate_ms}'}}
@@ -176,40 +176,69 @@
           <button class="btn btn-secondary btn-sm" (click)=SaveLink()>Override Episode Link</button>
         </li>
       </ul>
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4" *ngIf="selectedGroup==='popup-color-scheme'">
         <li class="list-group-item flex-column align-items-start">
-          <h4>Popup Color Override</h4>
-          <p>Only Properties which contains background or colors are hackable.</p>
+          <h4>Popup Color Scheme</h4><span>Warning: Banner is enabled. Below color scheme will not be shown</span>
+          <p>Change the default background and font colors of the popup show container <br>
+            Resources to get you going: 
+            <a href='http://paletton.com/' target='_blank'>Color Scheme Designer</a>, 
+            <a href='http://lea.verou.me/css3patterns/' class='advanced_css_examples' title='https://github.com/LeaVerou/CSS3-Patterns-Gallery'
+                target='_blank'>CSS3 Background Examples</a>,
+            <a href='http://www.colorzilla.com/gradient-editor/' class='advanced_css_examples' target='_blank'>CSS3 Gradient Generator 1</a> and
+            <a href='http://gradients.glrzad.com/' class='advanced_css_examples' target='_blank'>CSS3 Gradient Generator 2</a>
+          </p>
+        </li>
+        <li class="list-group-item flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+             Advanced CSS hack 
+          <tvq-switch [(ngModel)]="showAdvancedCssHack"></tvq-switch>
+          </div>
+          <small class="text-muted">(Only Properties which contains background or colors are hackable.)</small> 
+        </li>
+        <li class="list-group-item justify-content-between">
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('default')">Default Scheme</button>
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('cool-patterns')">Cool Patterns</button>
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('easter')">Easter</button>
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('halloween')">Halloween</button>
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('christmas')">Christmas</button>
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('valentine')">Valentine</button>
+          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('saint-patrick-day')">Saint Patrick's Day</button>
         </li>
         <li class="list-group-item d-flex flex-column">
           <div class="row w-100 mb-3">
             <div class="col-6" *ngIf="!!settings.ui && settings.ui.runningUnseen">
               runningUnseen CSS:
-             <textarea class="form-control" name="runningUnseen" [(ngModel)]="settings.ui.runningUnseen.cssText" rows="2" ></textarea>
+             <textarea *ngIf="showAdvancedCssHack" class="form-control" name="runningUnseen" [(ngModel)]="settings.ui.runningUnseen.cssText" rows="2" ></textarea>
+             <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
             </div>
             <div class="col-6" *ngIf="!!settings.ui && settings.ui.runningSeen">
               runningSeen CSS:
-             <textarea class="form-control" name="runningSeen" [(ngModel)]="settings.ui.runningSeen.cssText" rows="2" ></textarea>
-          </div>
+             <textarea *ngIf="showAdvancedCssHack" class="form-control" name="runningSeen" [(ngModel)]="settings.ui.runningSeen.cssText" rows="2" ></textarea>
+             <tvq-show-summary-banner [containerStyle]="settings.ui.runningSeen.cssText"></tvq-show-summary-banner>
+            </div>
           </div>
           <div class="row w-100  mb-3">
             <div class="col-6" *ngIf="!!settings.ui && settings.ui.tbaUnseen">
               tbaUnseen CSS:
-              <textarea class="form-control" name="tbaUnseen" [(ngModel)]="settings.ui.tbaUnseen.cssText" rows="2"></textarea>
+              <textarea *ngIf="showAdvancedCssHack" class="form-control" name="tbaUnseen" [(ngModel)]="settings.ui.tbaUnseen.cssText" rows="2"></textarea>
+              <tvq-show-summary-banner [containerStyle]="settings.ui.tbaUnseen.cssText"></tvq-show-summary-banner>
             </div>
             <div class="col-6" *ngIf="!!settings.ui && settings.ui.tbaSeen">
               tbaSeen CSS:
-              <textarea class="form-control" name="tbaSeen" [(ngModel)]="settings.ui.tbaSeen.cssText" rows="2"></textarea>
+              <textarea *ngIf="showAdvancedCssHack" class="form-control" name="tbaSeen" [(ngModel)]="settings.ui.tbaSeen.cssText" rows="2"></textarea>
+              <tvq-show-summary-banner [containerStyle]="settings.ui.tbaSeen.cssText"></tvq-show-summary-banner>
             </div>
           </div>
           <div class="row w-100  mb-3">
             <div class="col-6"  *ngIf="!!settings.ui && settings.ui.completedUnseen">
               completedUnseen CSS:
-              <textarea class="form-control" name="completedUnseen" [(ngModel)]="settings.ui.completedUnseen.cssText" rows="2"></textarea>
+              <textarea *ngIf="showAdvancedCssHack" class="form-control" name="completedUnseen" [(ngModel)]="settings.ui.completedUnseen.cssText" rows="2"></textarea>
+              <tvq-show-summary-banner [containerStyle]="settings.ui.completedUnseen.cssText"></tvq-show-summary-banner>
             </div>
             <div class="col-6"  *ngIf="!!settings.ui && settings.ui.completedSeen">
               completedSeen CSS:
-              <textarea class="form-control" name="completedSeen" [(ngModel)]="settings.ui.completedSeen.cssText" rows="2"></textarea>
+              <textarea *ngIf="showAdvancedCssHack" class="form-control" name="completedSeen" [(ngModel)]="settings.ui.completedSeen.cssText" rows="2"></textarea>
+              <tvq-show-summary-banner [containerStyle]="settings.ui.completedSeen.cssText"></tvq-show-summary-banner>
             </div>
           </div>
           <div class="row w-100  mb-3">
@@ -222,16 +251,28 @@
     </div>
     <div class="col-3">
       <ul class="list-group">
-        <li class="list-group-item active">Preferences</li>
-        <li class="list-group-item">Timezone</li>
-        <li class="list-group-item">Backup &amp; Restore</li>
-        <li class="list-group-item">Cloud Services</li>
-        <li class="list-group-item">Link Override</li>
-        <li class="list-group-item">Popup Color Override</li>
+        <li class="list-group-item" [ngClass]="{'active':selectedGroup === 'preferences'}">
+         <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'preferences'}">Preferences</a> 
+        </li>
+        <li class="list-group-item" [ngClass]="{'active':selectedGroup==='timezone'}">
+          <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'timezone'}">Timezone</a> 
+          </li>
+        <li class="list-group-item" [ngClass]="{'active':selectedGroup==='backup-restore'}">
+          <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'backup-restore'}">Backup &amp; Restore</a> 
+          </li>
+        <li class="list-group-item" [ngClass]="{'active':selectedGroup==='cloud-services'}">
+          <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'cloud-services'}">Cloud Services</a> 
+          </li>
+        <li class="list-group-item" [ngClass]="{'active':selectedGroup==='link-override'}">
+          <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'link-override'}">Link Override</a> 
+          </li>
+        <li class="list-group-item" [ngClass]="{'active':selectedGroup==='popup-color-scheme'}">
+          <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'popup-color-scheme'}">Popup Color Scheme</a> 
+          </li>
       </ul>
     </div>
   </div>
 </div>
 
-
+ 
   

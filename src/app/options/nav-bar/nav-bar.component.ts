@@ -7,8 +7,7 @@ import { SettingsService } from '../../providers/settings.service';
 @Component({
   selector: 'tvq-nav-bar',
   templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
 

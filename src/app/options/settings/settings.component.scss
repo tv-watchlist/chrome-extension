@@ -2,9 +2,15 @@
     background-color: coral;
     border-color: coral;
 }
+ 
+.list-group a, .list-group a:hover {
+    color: coral !important;
+    cursor: pointer;
+}
 
-a, a:hover {
-    color: coral;
+.list-group .active a, .list-group .active a:hover {
+    color: white !important;
+    cursor: pointer;
 }
 
 .list-group {

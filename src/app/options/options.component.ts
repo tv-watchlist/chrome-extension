@@ -19,8 +19,8 @@ export class OptionsComponent implements OnInit {
 
   }
 
- // http://akveo.com/ng2-admin/#/pages/dashboard
+  // http://akveo.com/ng2-admin/#/pages/dashboard
   ngOnInit() {
-    // document.body.style.backgroundColor = 'F5DEB3';
+
   }
 }

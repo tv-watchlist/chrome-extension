@@ -19,6 +19,7 @@ export class Settings {
   hide_tba?: boolean;
   listings_next_update_date?: number;
   notify_before?: number;
+  running_days_limit?: number;
   override_episode_summary_link?: string;
   // schedules_next_update_date_US?: number;
   shows_order?: string;
@@ -29,6 +30,8 @@ export class Settings {
 
   constructor() {
     this.ui = {};
+    this.notify_before = 0;
+    this.running_days_limit = 0;
     this.timezone_offset = {};
     this.custom_shows_order = [];
   }

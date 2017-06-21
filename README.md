@@ -6,12 +6,16 @@ Below was used to generate the scaffold:
 ng new chrome-extension --style=scss --skip-tests=true --prefix=tvq --routing=true
 
 According to [Angular CLI Stories](https://github.com/angular/angular-cli/wiki/stories-disk-serve)
-ng build --watch
-lite-server --baseDir="dist" (node_modules/.bin/lite-server --baseDir="dist")
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+To run as chrome extension open two cmd window and run below in each.
+
+ng build --watch
+
+lite-server --baseDir="dist" (node_modules/.bin/lite-server --baseDir="dist")
 
 ## Code scaffolding
 

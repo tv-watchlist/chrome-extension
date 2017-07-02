@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
+import { DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OptionsComponent } from './options/options.component';
@@ -11,14 +11,25 @@ import { NavBarComponent } from './options/nav-bar/nav-bar.component';
 import { BackgroundComponent } from './background/background.component';
 import { PopupComponent } from './popup/popup.component';
 import { NotFoundComponent } from './not-found.component';
+import { DropboxComponent } from './dropbox/dropbox.component';
+import { ShowManagerComponent } from './options/show-manager/show-manager.component';
+import { ShowDetailComponent } from './show-detail/show-detail.component';
+import { EpisodeListComponent } from './show-detail/episode-list/episode-list.component';
+
+import { SettingsComponent } from './options/settings/settings.component';
+import { ShowSummaryBannerComponent } from './show-summary-banner/show-summary-banner.component';
 
 import { WidgetModule } from './widgets/widget.module';
-import { SettingsService } from './providers/settings.service';
-import { PageQueryGuard } from './providers/page-query.guard';
-import { LoggerService } from './providers/logger.service';
+import {
+  SettingsService,
+  ShowsService,
+  DropboxService,
+  PageQueryGuard,
+  LoggerService,
+  CommonService
+} from './providers';
+
 import { IDXDataDefinitionService, IDXDataManipulationService, IDXSchema } from './providers/indexed-db.service';
-import { ShowManagerComponent } from './options/show-manager/show-manager.component';
-import { SettingsComponent } from './options/settings/settings.component';
 
 export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataManipulationService): Function {
   const schema: IDXSchema = {
@@ -65,7 +76,11 @@ export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataMani
     NotFoundComponent,
     NavBarComponent,
     ShowManagerComponent,
-    SettingsComponent
+    SettingsComponent,
+    DropboxComponent,
+    ShowSummaryBannerComponent,
+    ShowDetailComponent,
+    EpisodeListComponent
   ],
   imports: [
     BrowserModule,
@@ -76,17 +91,21 @@ export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataMani
     AppRoutingModule
   ],
   providers: [
+    DatePipe,
     PageQueryGuard,
     LoggerService,
-    SettingsService,
+    CommonService,
     IDXDataDefinitionService,
+    DropboxService,
     IDXDataManipulationService,
     {
       provide: APP_INITIALIZER,
       useFactory: indexedDBFactory,
       deps: [IDXDataDefinitionService, IDXDataManipulationService],
       multi: true
-    }
+    },
+    SettingsService,
+    ShowsService,
   ],
   bootstrap: [AppComponent]
 })

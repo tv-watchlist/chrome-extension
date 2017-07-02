@@ -88,7 +88,7 @@ export class IDXDataDefinitionService {
   private _dbName: string = null;
 
   constructor(private logger: LoggerService) {
-    console.debug('new IDXDataDefinitionService called');
+    logger.debug('new IDXDataDefinitionService called');
   }
 
   getIndexedDB() {
@@ -110,28 +110,28 @@ export class IDXDataDefinitionService {
         reject(new Error('schema is not defined'));
       }
 
-      console.debug('about to open...', this._schema);
+      this.logger.debug('about to open...', this._schema);
 
       try {
         this.Close();
         const dbOpenRequest = this.getIndexedDB().open(this._schema.dbName, this._schema.version);
         dbOpenRequest.onerror = (err) => {
-          console.debug('dbOpenRequest.onerror!', err);
+          this.logger.debug('dbOpenRequest.onerror!', err);
           reject(err);
         };
         dbOpenRequest.onblocked = () => {
-          console.debug('dbOpenRequest.onblocked!');
+          this.logger.debug('dbOpenRequest.onblocked!');
           reject(new Error('Database schema cannot be modified, its in use. Close all open connection.'));
         };
         dbOpenRequest.onsuccess = (event) => {
           this._db = dbOpenRequest.result;
           this._version = this._schema.version;
           this._dbName = this._schema.dbName;
-          console.debug('dbOpenRequest.onsuccess!', this);
+          this.logger.debug('dbOpenRequest.onsuccess!', this);
           resolve(this._db);
         };
         dbOpenRequest.onupgradeneeded = (event) => {
-          console.debug('dbOpenRequest.onupgradeneeded!: ', event);
+          this.logger.debug('dbOpenRequest.onupgradeneeded!: ', event);
           this._db = dbOpenRequest.result;
           const oldVersion = event.oldVersion;
           const newVersion = event.newVersion;
@@ -153,7 +153,7 @@ export class IDXDataDefinitionService {
                     this.CreateObjectStore(store, transaction);
                   break;
                   default:
-                  console.error(`store.operation ${store.operation} not recognized`);
+                  this.logger.error(`store.operation ${store.operation} not recognized`);
                     break;
                 }
               });
@@ -164,7 +164,7 @@ export class IDXDataDefinitionService {
             // do all data initialization here
             const dml = new IDXDataManipulationService(this.logger);
             dml.setDB(transaction.db);
-            console.debug('indexedDB.onupgradeneeded complete! ');
+            this.logger.debug('indexedDB.onupgradeneeded complete! ');
             // do data init or data migration here
             for (let index = 1; index <= this._schema.version; index++) {
               if (index > oldVersion) {
@@ -185,7 +185,7 @@ export class IDXDataDefinitionService {
           };
         };
       } catch (error) {
-        console.debug('surya err: ', error);
+        this.logger.debug('surya err: ', error);
         reject(error);
       }
     });
@@ -194,14 +194,14 @@ export class IDXDataDefinitionService {
   DropObjectStore(storeName: string) {
       if (this._db.objectStoreNames.contains(storeName)) {
         this._db.deleteObjectStore(storeName);
-        console.debug('objectstore ' + storeName + ' dropped');
+        this.logger.debug('objectstore ' + storeName + ' dropped');
       } else {
-        console.debug('Doesnt exist! cannot delete ObjectStore ', storeName);
+        this.logger.debug('Doesnt exist! cannot delete ObjectStore ', storeName);
       }
   }
 
   CreateObjectStore(storeSchema, transaction: IDBTransaction) {
-    console.debug('CreateObjectStore', storeSchema);
+    this.logger.debug('CreateObjectStore', storeSchema);
     const strParam: IDBObjectStoreParameters = {};
     if (!!storeSchema.primaryField) {
       strParam.keyPath = storeSchema.primaryField;
@@ -247,17 +247,17 @@ export class IDXDataDefinitionService {
   }
 
   DeleteDatabase(dbName) {
-    console.debug('DeleteDatabase ', dbName || this._dbName);
+    this.logger.debug('DeleteDatabase ', dbName || this._dbName);
     return new Promise((resolve, reject) => {
       this.Close();
       const deleteReq = this.getIndexedDB().deleteDatabase(dbName || this._dbName);
       deleteReq.onsuccess = () => {
-        console.debug('Database deleted');
+        this.logger.debug('Database deleted');
         resolve(true);
       };
       deleteReq.onblocked = (e) => {
         // alert('database blocked. Please close all tabs');
-        console.debug('db Blocked!: ', e);
+        this.logger.debug('db Blocked!: ', e);
         reject([false, e]);
       };
       deleteReq.onerror = (e) => {
@@ -274,7 +274,7 @@ export class IDXDataManipulationService {
   constructor(private logger: LoggerService) { }
   public setDB(db: IDBDatabase) {
       this.db = db;
-      console.log('setting db');
+      this.logger.log('setting db');
       Promise.resolve();
   }
 
@@ -287,7 +287,7 @@ export class IDXDataManipulationService {
  * @param values
  */
   GetKeyRange(operator: Operator, values: RangeValues) {
-    // console.debug('GetKeyRange',operator, values);
+    // this.logger.debug('GetKeyRange',operator, values);
     let range = null;
     switch (operator) {
       case '==':
@@ -371,7 +371,7 @@ export class IDXDataManipulationService {
           reject(event);
         };
       } else {
-        console.debug('Does not exist! cannot clear ObjectStore ', storeName);
+        this.logger.debug('Does not exist! cannot clear ObjectStore ', storeName);
         reject(false);
       }
     });
@@ -380,7 +380,7 @@ export class IDXDataManipulationService {
   ClearAllStores(skipStores: string[] = []) {
     return new Promise((resolve, reject) => {
       const storeList = this.db.objectStoreNames;
-      console.debug(storeList);
+      this.logger.debug(storeList);
 
       const len = storeList.length - skipStores.length;
       let count = 0;
@@ -460,7 +460,7 @@ export class IDXDataManipulationService {
         const transaction = this.db.transaction(storeName, TransactionType.READ_ONLY);
         const list = resultMapKey ? {} : [] ;
         transaction.oncomplete = (event) => {
-            // console.log(results);
+            // this.logger.log(results);
             resolve([list, storeName]);
         };
         transaction.onerror = function(e) {reject(e); };
@@ -528,13 +528,13 @@ export class IDXDataManipulationService {
                       resultSet[cursor.value[options.resultMapKey]] = cursor.value;
                     }
                     limit--;
-                    // console.debug(cursor.value);
+                    // this.logger.debug(cursor.value);
                     cursor.continue();
                   } else {
                     try {
                       transaction.abort();
                     } catch (e) {
-                      console.debug(e);
+                      this.logger.debug(e);
                     }
                   }
                 }
@@ -543,7 +543,7 @@ export class IDXDataManipulationService {
           cursorRequest.onsuccess = (ev) => {
             const cursor = cursorRequest.result;
             if (cursor) {
-              // console.debug(cursor.value);
+              // this.logger.debug(cursor.value);
               if (Array.isArray(resultSet)) {
                 resultSet.push(cursor.value);
               }else {
@@ -576,7 +576,7 @@ export class IDXDataManipulationService {
         const transaction = this.db.transaction([storeName], TransactionType.READ_WRITE);
         let count = 0;
         transaction.oncomplete = (event) => {
-          console.debug(storeName + ' Added ' + count + '/' + _list.length);
+          this.logger.debug(storeName + ' Added ' + count + '/' + _list.length);
           resolve([count, _list.length, true]); // final result
         };
         transaction.onabort = (event) => {
@@ -597,7 +597,7 @@ export class IDXDataManipulationService {
             ++count;
             resolve([count, _list.length, false]); // for progress
           } else {   // complete
-            console.debug('populate complete');
+            this.logger.debug('populate complete');
           }
         };
         putNext();
@@ -739,7 +739,7 @@ export class IDXDataManipulationService {
             resolve(JSON.stringify(obj));
           }
         }).catch((err) => {
-          console.debug(err);
+          this.logger.debug(err);
           index++;
           if (index === len) {
             resolve(JSON.stringify(obj));

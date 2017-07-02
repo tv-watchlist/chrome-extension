@@ -1,0 +1,33 @@
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="img-container">
+      <img style="width:100%;height: auto;" [alt]="show.name" [src]="show.image.banner[0]" 
+          (error)="imgError($event)" [title]="show.name" >
+      <div class="glass glass-banner">
+        <i class="fa fa-cog cursor-pointer" aria-hidden="true"></i>
+        <i class="fa fa-info-circle cursor-pointer" aria-hidden="true" data-toggle="collapse" [attr.data-target]="'#Summary'+show.show_id"></i>
+      </div>
+    </div>
+  </div>
+</div>  
+<div class="row">
+  <div class="col-12">
+    <div class="collapse" [id]="'Summary'+show.show_id">
+      <div class="card card-block border-0" [innerHTML]="show.summary">
+      </div>
+    </div>
+  </div>
+</div>  
+<div class="row mb-3">
+  <div class="col-6">
+    <small>Unseen: {{show.unseen_count || 0}} / {{show.total_episodes}}</small>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <small>Next show: {{NextShowInDays(show)}}</small> 
+  </div>
+</div>  
+<div class="row mb-3">
+  <div class="col-12">
+    <tvq-episode-list [show]="show"></tvq-episode-list>
+  </div>
+</div>

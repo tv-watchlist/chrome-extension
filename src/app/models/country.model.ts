@@ -1,3 +1,10 @@
+ export class CountryModel {
+    name: string;
+    code: string;
+    timezone: string;
+    // test = {"name":"United States","code":"US","timezone":"America/New_York"};
+}
+
  export const CountryIso2 = {
     'AF': 'Afghanistan',
     'AX': '�land Islands',

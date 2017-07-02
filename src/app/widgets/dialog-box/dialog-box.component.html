@@ -1,0 +1,19 @@
+<!-- Modal -->
+<div class="modal fade" [id]="modelId" tabindex="-1" role="dialog" [attr.aria-labelledby]="'Label'+modelId">
+  <div class="modal-dialog" [ngClass]="{'modal-lg': dialogSize === 'Large', 'modal-sm': dialogSize === 'Small'}" role="document">
+    <div class="modal-content">
+      <div [class.modal-header]="!!modal_title && modal_title.children.length > 0">
+        <h5 class="modal-title" [id]="'Label'+modelId" #modal_title><ng-content select="header"></ng-content></h5>
+        <button [hidden]="!modal_title || modal_title.children.length == 0"
+         type="button" class="close" (click)="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         
+      </div>
+      <div class="modal-body">
+        <ng-content select="main"></ng-content>
+      </div>
+      <div [class.modal-footer]="!!modal_footer && modal_footer.children.length > 0"  #modal_footer>
+        <ng-content select="footer"></ng-content>
+      </div>
+    </div>
+  </div>
+</div>

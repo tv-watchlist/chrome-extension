@@ -9,6 +9,10 @@ According to [Angular CLI Stories](https://github.com/angular/angular-cli/wiki/s
 
 ## Development server
 
+Tested on Nodejs v8.1.2
+
+npm install
+
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 To run as chrome extension open two cmd window and run below in each.
@@ -16,6 +20,9 @@ To run as chrome extension open two cmd window and run below in each.
 ng build --watch
 
 lite-server --baseDir="dist" (node_modules/.bin/lite-server --baseDir="dist")
+
+Troubleshoot:
+Make sure that global angular-cli version matches with package.json (if global packages are installed)
 
 ## Code scaffolding
 

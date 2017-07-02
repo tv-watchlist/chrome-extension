@@ -1,3 +1,66 @@
-<p>
-  show-manager works!
-</p>
+<div class="container-fluid">
+  <div class="d-flex justify-content-center">
+    <div id="carouselExampleIndicators" class="carousel slide mb-3" data-ride="carousel" style="width:720px;">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" [ngClass]="{'active':i===0}" [attr.data-slide-to]="i" *ngFor="let src of carouselList;let i=index"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      <div class="carousel-item" [ngClass]="{'active':i===0}"  *ngFor="let src of carouselList;let i=index">
+        <img class="d-block img-fluid" [src]="src" alt="slide" style="height:400px;">
+        <div class="carousel-caption d-none d-md-block">
+          <h3>Testing {{i}}</h3>
+          <p>{{src}}</p>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  </div>
+  
+  <div *ngFor="let group_name of show_group_order">
+    <div class="page-header" *ngIf="getShowList(group_name).length > 0">
+        <h3>{{group_name}} <small>({{getShowList(group_name).length}} Shows)</small></h3>
+    </div>
+    <div class="row mb-3">
+      <div class="col-2 mb-3" *ngFor="let show of getShowList(group_name)">
+        <div class="card">
+          <img style="width:100%;height:auto;padding:5px" class="card-img-top shadow" [alt]="show.name"
+           [src]="show.image.poster[0]" (error)="imgError($event)" [title]="show.name" (click)="displayDetails(show)">
+          <div class="card-block p-2">
+            <h6 style="font-size: 0.8rem;" [innerHTML]="show.name"></h6>
+            <div class="d-flex w-100 justify-content-between">
+              <p class="card-text mb-0" *ngIf="group_name === 'Running'"><small class="text-muted">Next: {{nextShowTime(show)}}</small></p>
+              <p class="card-text mb-0" *ngIf="show.unseen_count !== 0"><small class="text-muted">Unseen: {{show.unseen_count}}</small></p>
+            </div>
+          </div>
+          <div class="card-footer d-flex w-100 justify-content-between">
+            <a href="#" class="card-link">Delete</a>
+            <a href="#" class="card-link" *ngIf="show.unseen_count !== 0">All Seen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<tvq-dialog-box #detailDialog dialogSize="Large">
+  <header *ngIf="!!selectedShow">
+    {{selectedShow.name}} <small>{{GetShowStatusText(selectedShow)}}</small>
+  </header>
+  <main *ngIf="!!selectedShow">
+    <tvq-show-detail [show]="selectedShow"></tvq-show-detail>
+  </main>
+  <footer *ngIf="!!selectedShow">
+    <button type="button" class="btn btn-success btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Mark All Seen</button>
+    <button type="button" class="btn btn-info btn-sm"><i class="fa fa-globe" aria-hidden="true"></i> Refresh</button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="confirm(selectedShow)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-times" aria-hidden="true"></i> Close</button>
+  </footer>
+</tvq-dialog-box>

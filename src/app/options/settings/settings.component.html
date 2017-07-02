@@ -134,12 +134,12 @@
         </li>
         <li class="list-group-item justify-content-between">
           Create Backup
-           <button class="btn btn-secondary btn-sm">Download</button> 
+           <button class="btn btn-secondary btn-sm" (click)="downloadBackup()">Download</button> 
         </li>
         <li class="list-group-item justify-content-between">
           Restore Backup
            <label class="custom-file form-control-sm d-inline">
-              <input type="file" id="file" class="custom-file-input">
+              <input type="file" id="file" class="custom-file-input" (change)="restoreBackup($event)">
               <span class="custom-file-control"></span>
           </label>
         </li>
@@ -151,11 +151,15 @@
           </p> 
         </li>
         <li class="list-group-item justify-content-between">
+          Dropbox File path
+          <input type="text" class="form-control form-control-sm w-50" [(ngModel)]="settings.dropbox_file_path" (change)="Save('dropbox_file_path')"/>
+        </li>
+        <li class="list-group-item justify-content-between">
           <a href="http://db.tt/ZNg9jmP" target="_blank" title="Dont have Dropbox account? Click to signup, They have free 2GB service"><img src="https://www.dropbox.com/static/images/new_logo.png" /></a>
-          <button class="btn btn-secondary btn-sm" id="dropbox_login">Login</button>
-          <button class="btn btn-secondary btn-sm" id="dropbox_save">Save to cloud</button>
-          <button class="btn btn-secondary btn-sm" id="dropbox_load">Load from cloud</button>
-          <button class="btn btn-secondary btn-sm" id="dropbox_logout">Logout</button>
+          <button [disabled]="isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxLogin()">Login</button>
+          <button [disabled]="!isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxUpload()">Save to cloud</button>
+          <button [disabled]="!isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxDownload()">Load from cloud</button>
+          <button [disabled]="!isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxLogout()">Logout</button>
         </li>
       </ul>
       <ul class="list-group mb-4" *ngIf="selectedGroup==='link-override'">
@@ -268,7 +272,7 @@
           </li>
         <li class="list-group-item" [ngClass]="{'active':selectedGroup==='popup-color-scheme'}">
           <a [routerLink]="['/options/settings']" [queryParams]="{selectedGroup: 'popup-color-scheme'}">Popup Color Scheme</a> 
-          </li>
+        </li>
       </ul>
     </div>
   </div>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { TestComponent } from './test.component';
 import { SwitchComponent } from './switch/switch.component';
-import { ShowSummaryBannerComponent } from './show-summary-banner/show-summary-banner.component';
+import { DialogBoxComponent } from './dialog-box';
 
 import { InputTextModule,
          ButtonModule,
@@ -13,7 +13,7 @@ import { InputTextModule,
 const componenets = [
   TestComponent,
   SwitchComponent,
-  ShowSummaryBannerComponent
+  DialogBoxComponent
 ];
 
 @NgModule({

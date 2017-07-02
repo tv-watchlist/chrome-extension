@@ -8,6 +8,7 @@ import { NotFoundComponent } from './not-found.component';
 import { Observable } from 'rxjs/Observable';
 import { PageQueryGuard } from './providers/page-query.guard';
 import { SettingsComponent } from './options/settings/settings.component';
+import { DropboxComponent } from './dropbox/dropbox.component';
 import { ShowManagerComponent } from './options/show-manager/show-manager.component';
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
     ]
   },
   { path: 'background', component: BackgroundComponent },
+  { path: 'dropbox', component: DropboxComponent },
   { path: '', redirectTo: 'options', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent, canActivate: [PageQueryGuard]  }
 ];

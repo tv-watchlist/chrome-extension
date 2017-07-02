@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LoggerService } from '../../providers/logger.service';
-import { SettingsService, Settings } from '../../providers/settings.service';
-
+import { LoggerService, SettingsService, DropboxService } from '../../providers';
+import { Settings } from '../../models';
 
 @Component({
   selector: 'tvq-settings',
@@ -16,7 +15,13 @@ export class SettingsComponent implements OnInit {
   countryMap: {[abr: string]: string};
   selectedGroup: string;
   showAdvancedCssHack: boolean;
-  constructor( private logger: LoggerService, private settingSvc: SettingsService, private route: ActivatedRoute) {
+  isDropboxAuthenticated: boolean;
+  reader: FileReader;
+  constructor( private logger: LoggerService,
+        private settingSvc: SettingsService,
+        private route: ActivatedRoute,
+        private dropboxSvc: DropboxService
+        ) {
     this.settings = new Settings();
     this.countries = settingSvc.getTimezoneCountries();
     this.countryMap = {};
@@ -37,9 +42,10 @@ export class SettingsComponent implements OnInit {
         this.selectedGroup = params['selectedGroup'] || 'preferences';
     });
     // this.route.fragment.subscribe(f => {
-    //   const element = document.querySelector("#" + f)
+    //   const element = document.querySelector('#' + f)
     //   if (element) element.scrollIntoView(element)
     // })
+    this.isDropboxAuthenticated = this.dropboxSvc.isAuthenticated();
   }
 
   Save(key: string) {
@@ -63,6 +69,132 @@ export class SettingsComponent implements OnInit {
   SaveLink() {
     this.logger.log('tvq-settings SaveLink');
     this.settingSvc.setSettings(this.settings);
+  }
+
+  downloadBackup() {
+    // $('#download_ajax').show();
+    // nsr.myTvQ.migration.ExportBackup(function (backupStr) {
+        const backupStr = 'testing 1 23 44';
+        const URL = window.URL;
+        // Create ObjectURL
+        const fileUrl = URL.createObjectURL(new Blob([backupStr], { type: 'text/plain' }));
+        const a = document.createElement('a');
+        a.setAttribute('href', fileUrl);
+        a.download = 'tv-watchlist.txt';
+        a.click();
+        URL.revokeObjectURL(fileUrl);
+        // $('#download_ajax').hide();
+    // });
+  }
+
+  restoreBackup(event) {
+    this.reader = new FileReader();
+    this.reader.onerror = (evt) => {
+      const fr = <FileReader>evt.target;
+      const err = <DOMException>fr.error;
+      switch (err.name) {
+        case 'NotFoundError':
+            // The File or Blob could not be found at the time the read was processed.
+            console.error('File Not Found!');
+            break;
+          case 'SecurityError':
+            // An error not covered by other error codes occured including:
+            // * Certain files are unsafe for access within a web application.
+            // * Too many read calls are being made on File or Blob resources.
+            // * The file has changed on disk since the user selected it.
+            break;
+          case 'AbortError':
+            // The read operation was aborted, typically with a call to abort().
+            break;
+          case 'NotReadableError':
+            // The File or Blob cannot be read, typically due due to permission problems
+            // that occur after a reference to a File or Blob has been acquired (concurrent lock with another application).
+            console.error('File is not readable!');
+            break;
+          case 'EncodingError':
+            // The length of the data URL for a File or Blob is too long.
+            break;
+          default:
+          console.error('File error code: ' + err.name) ;
+      };
+    };
+    // If we use onloadend, we need to check the readyState.
+    this.reader.onloadend = (evt) => {
+        const fr = <FileReader>evt.target;
+        if (fr.readyState === 2) { // DONE == 2
+            const fileContent = fr.result;
+            try {
+                console.log('fileContent', fileContent);
+                // localStorage['pause'] = 1;
+                // let backup = JSON.parse(fileContent || '{}');
+                // nsr.myTvQ.migration.ImportBackup(backup, function (count) {
+                //     nsr.myTvQ.subscribed.SetBadgeStatus();
+                //     console.log('Imported', count);
+                //     displayStatus('#myTvQStatus', 'Saved...');
+                //     localStorage['pause'] = 0;
+                // });
+            } catch (e) {
+                console.log('Import Error', e);
+                // displayStatus('#myTvQStatus', 'Error: Invalid json.', true);
+            }
+        }
+    };
+
+    const file = event.target.files[0]; // FileList object.
+    // console.log(file);
+    // Read in the file as a binary string.
+    // will invoke onloadend with content
+    this.reader.readAsText(file);
+  }
+
+  DropboxLogin() {
+    if (!this.dropboxSvc.isAuthenticated()) {
+      window.open(this.dropboxSvc.getAuthenticationUrl(), 'dropboxWindow');
+    } else {
+      // console.log(this.dropboxSvc.AccessToken);
+      this.dropboxSvc.getAccountInfo().then(function (result) {
+          console.log('Dropbox already authenticated', result);
+      }).catch(function (err) {
+          console.error('Dropbox Error:', err);
+      });
+    }
+  }
+
+  DropboxDownload() {
+      this.dropboxSvc.download(this.settings.dropbox_file_path).then(function (data) {
+        console.log('dropbox data', data);
+        // try {
+        //     localStorage['pause'] = '1';
+        //     nsr.myTvQ.migration.ImportBackup(JSON.parse(data), function (count) {
+        //         nsr.myTvQ.subscribed.SetBadgeStatus();
+        //         localStorage['pause'] = '0';
+        //         console.log('Imported', count);
+        //         displayStatus('#myTvQStatus', 'Imported...');
+        //     });
+        // } catch (e) {
+        //     console.log('Import Error', e);
+        // }
+    }).catch(function (err) {
+        console.error('Dropbox Error:', err);
+    });
+  }
+
+  DropboxUpload() {
+    // nsr.myTvQ.migration.ExportBackup(function (backupStr) {
+        this.dropboxSvc.upload('this is test 1 2 3 ' + Date.now() , this.settings.dropbox_file_path).then(function (data) {
+            console.log('uploaded', data);
+        }).catch(function (err) {
+            console.error('Dropbox  Error:', err);
+        });
+    // });
+  }
+
+  DropboxLogout() {
+   this.dropboxSvc.revokeToken().then((data) => {
+    this.isDropboxAuthenticated = false;
+   }).catch((err) => {
+     this.isDropboxAuthenticated = false;
+   });
   }
 
   SaveColor() {

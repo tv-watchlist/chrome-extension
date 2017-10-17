@@ -30,7 +30,18 @@ export class SettingsService {
       }
   }
 
-  async setSettings(setting: Settings) {
+  setEmptyUIModel(setting: Settings) {
+    setting.ui = {
+        'runningUnseen': { 'cssText': '' },
+        'runningSeen': { 'cssText': '' },
+        'tbaUnseen': { 'cssText': '' },
+        'tbaSeen': { 'cssText': '' },
+        'completedUnseen': { 'cssText': '' },
+        'completedSeen': { 'cssText': '' }
+    };
+  }
+
+  setSettings(setting: Settings) {
     try {
       const list = [];
       for (const key in setting) {
@@ -39,10 +50,10 @@ export class SettingsService {
         }
       }
       if (list.length > 0) {
-        await this.dml.AddList('settings', list);
+        return this.dml.AddList('settings', list);
       }
     } catch (error) {
-        this.logger.error(error);
+        return Promise.reject(error);
     }
   }
 

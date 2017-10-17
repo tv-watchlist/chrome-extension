@@ -74,7 +74,7 @@ const CursorType = {
 
 export type Operator = '=='|'<'|'<='|'>'|'>='|'> && <'|'>= && <='|'> && <='|'>= && <';
 
-export interface RangeValues {
+export class RangeValues {
   first: string;
   second?: string;
 }
@@ -454,7 +454,12 @@ export class IDXDataManipulationService {
       }
     });
   }
-
+  /**
+   * if resultMapKey is not provided, result is returned as Array. Otherwise
+   * an object is returned.
+   * @param storeName
+   * @param resultMapKey
+   */
   FetchAll(storeName: string, resultMapKey?: string) {
     return new Promise((resolve, reject) => {
         const transaction = this.db.transaction(storeName, TransactionType.READ_ONLY);

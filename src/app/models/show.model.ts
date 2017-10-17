@@ -1,9 +1,10 @@
-import { EpisodeModel } from './episode.model';
-import { ChannelModel } from './channel.model';
-import { ApiIdModel } from './api-id.model';
-import { ImageModel } from './image.model';
-import { ScheduleModel } from './schedule.model';
-import { UserRatingModel } from './user-rating.model';
+import { EpisodeModel,
+    CountryModel,
+    ChannelModel,
+    ApiIdModel,
+    ImageModel,
+    ScheduleModel,
+    UserRatingModel } from './';
 
 export class ShowModel {
     show_id: string;
@@ -32,6 +33,34 @@ export class ShowModel {
     next_episode: EpisodeModel;
     last_episode: EpisodeModel;
     episode_list:  { [id:  string]:  EpisodeModel; };
+
+    constructor() {
+        this.show_id = '';  // key
+        this.next_update_time = 0; // index
+        this.name = '';
+        this.url = '';
+        this.show_type = '';
+        this.language = null;
+        this.genres = [];
+        this.status = null; // (Running, Ended, To Be Determined, In Development)
+        this.runtime = 0;
+        this.premiered = null;
+        this.summary = null;
+        this.cast = [];
+        this.schedule = new ScheduleModel();
+        this.user_rating = new UserRatingModel();
+        this.content_rating = null;
+        this.channel = new ChannelModel();
+        this.api_source = '';
+        this.api_id =  new ApiIdModel();
+        this.image = new ImageModel();
+
+        this.unseen_count = 0,
+        this.first_episode = null;
+        this.previous_episode = null;
+        this.next_episode = null;
+        this.last_episode = null;
+    }
 }
     //  test = {"show_id": "tvmaze1264",
     //  "next_update_time": 1445949982,

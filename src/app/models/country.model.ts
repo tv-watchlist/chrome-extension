@@ -3,6 +3,11 @@
     code: string;
     timezone: string;
     // test = {"name":"United States","code":"US","timezone":"America/New_York"};
+    constructor() {
+        this.name = '';
+        this.code = '';
+        this.timezone = '';
+    }
 }
 
  export const CountryIso2 = {

@@ -34,7 +34,7 @@ export class SettingsComponent implements OnInit {
   async ngOnInit() {
     this.settings = await this.settingSvc.getSettings();
     if (!this.settings.ui) {
-      this.settings.setUIModel();
+      this.settingSvc.setEmptyUIModel(this.settings);
     }
     this.logger.log('options', this.settings);
     this.route.queryParams.subscribe((params) => {
@@ -278,8 +278,8 @@ background-color:#282828;background-size:16px 16px;color:rgb(255, 255, 255);` },
   GetEasterColorScheme() {
     return {
               'runningUnseen': { 'cssText': `background-color:#ac0;background-image:
--webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, 
-transparent 25%,transparent 50%,rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,transparent 75%, 
+-webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%,
+transparent 25%,transparent 50%,rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,transparent 75%,
 transparent);background-size:26px 26px;` },
               'runningSeen': { 'cssText': 'background-color:rgba(170, 204, 0, 0.8);color:rgb(0, 0, 0);' },
               'tbaUnseen': { 'cssText': `background-color:#0ae;background-image:
@@ -311,10 +311,10 @@ transparent 50%, transparent);background-size:20px 20px;`},
           tbaUnseen: { cssText: 'background-color:rgb(249, 32, 44);color:rgb(0, 0, 0)' },
           tbaSeen: { cssText: 'background-color:rgba(242, 47, 78, 0.8);color:rgb(0, 0, 0)' },
           completedUnseen: { cssText: `background-color: rgb(239, 1, 219);background-image: -webkit-gradient(linear, 0 0, 100% 100%,
- color-stop(.25, rgba(255, 255, 255, .2)),color-stop(.25,transparent),color-stop(.5, transparent), 
- color-stop(.5, rgba(255, 255, 255, .2)),color-stop(.75, rgba(255, 255, 255, .2)), 
+ color-stop(.25, rgba(255, 255, 255, .2)),color-stop(.25,transparent),color-stop(.5, transparent),
+ color-stop(.5, rgba(255, 255, 255, .2)),color-stop(.75, rgba(255, 255, 255, .2)),
  color-stop(.75, transparent),to(transparent));
- background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,transparent 50%, 
+ background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,transparent 50%,
  rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,transparent 75%, transparent);
  background-size: 26px 26px;` },
           completedSeen: { cssText: 'background-color:rgb(238, 130, 238);color:rgb(0, 0, 0)' }
@@ -324,7 +324,7 @@ transparent 50%, transparent);background-size:20px 20px;`},
     GetValentineColorScheme() {
       return  {
             'runningUnseen': { 'cssText': `background:-webkit-radial-gradient(60% 43%, circle closest-side ,
-rgb(255, 105, 180) 27%, rgba(187,0,51,0) 27%),-webkit-radial-gradient(40% 43%, circle closest-side , rgb(255, 105, 180) 27%, 
+rgb(255, 105, 180) 27%, rgba(187,0,51,0) 27%),-webkit-radial-gradient(40% 43%, circle closest-side , rgb(255, 105, 180) 27%,
 rgba(187,0,51,0) 27%),-webkit-radial-gradient(40% 22%, circle closest-side , #f00 45%, rgba(221,51,85,0) 46%),
 -webkit-radial-gradient(60% 22%, circle closest-side , #f00 45%, rgba(221,51,85,0) 46%),
 -webkit-radial-gradient(50% 35%, circle closest-side , #f00 30%, rgba(221,51,85,0) 31%),

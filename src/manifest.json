@@ -13,10 +13,11 @@
         "persistent": false
     },
     "permissions": [
-        "http://*.tvrage.com/*",
         "http://*.thetvdb.com/*",
-        "https://*.dropbox.com/*",
+        "https://*.thetvdb.com/*",
         "http://*.tvmaze.com/*",
+        "https://*.tvmaze.com/*",
+        "https://*.dropbox.com/*",
         "notifications",
         "storage",
         "alarms"

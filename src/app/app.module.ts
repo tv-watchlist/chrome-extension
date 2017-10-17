@@ -26,7 +26,10 @@ import {
   DropboxService,
   PageQueryGuard,
   LoggerService,
-  CommonService
+  CommonService,
+  MigrationService,
+  TheTvDbService,
+  TvMazeService,
 } from './providers';
 
 import { IDXDataDefinitionService, IDXDataManipulationService, IDXSchema } from './providers/indexed-db.service';
@@ -34,14 +37,71 @@ import { IDXDataDefinitionService, IDXDataManipulationService, IDXSchema } from 
 export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataManipulationService): Function {
   const schema: IDXSchema = {
         'dbName': 'testDB',
-        'version': 1,
+        'version': 2,
         'revision': {
         1: [{'name': 'settings',
             'operation': 'CREATE',
             'primaryField': 'Name',
             'autoIncrement': false,
             'indexes': null,
-          }]
+          }],
+          2: [{'name': 'searches',
+            'operation': 'CREATE',
+            'primaryField': 'show_id',
+            'autoIncrement': false,
+            'indexes': null,
+          },
+          {'name': 'subscribed_shows',
+            'operation': 'CREATE',
+            'primaryField': 'show_id',
+            'autoIncrement': false,
+            'indexes': [{
+              name: 'next_update_time_Index',
+              field: 'next_update_time',
+              operation: 'CREATE',
+              unique: false,
+              multiEntry: false
+            }]
+          },
+          {'name': 'subscribed_episodes',
+            'operation': 'CREATE',
+            'primaryField': 'episode_id',
+            'autoIncrement': false,
+            'indexes': [{
+                name: 'show_id_Index',
+                field: 'show_id',
+                operation: 'CREATE',
+                unique: false,
+                multiEntry: false
+              },
+              {
+                name: 'local_showtime_Index',
+                field: 'local_showtime',
+                operation: 'CREATE',
+                unique: false,
+                multiEntry: false
+              }]
+          },
+          {'name': 'notification',
+            'operation': 'CREATE',
+            'primaryField': 'id',
+            'autoIncrement': false,
+            'indexes': [{
+              name: 'notify_time_Index',
+              field: 'notify_time',
+              operation: 'CREATE',
+              unique: false,
+              multiEntry: false
+            },
+            {
+              name: 'show_id_Index',
+              field: 'show_id',
+              operation: 'CREATE',
+              unique: false,
+              multiEntry: false
+            }]
+          },
+          ]
         },
         'seedData': {1:
                       {'settings':
@@ -106,6 +166,9 @@ export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataMani
     },
     SettingsService,
     ShowsService,
+    MigrationService,
+    TheTvDbService,
+    TvMazeService
   ],
   bootstrap: [AppComponent]
 })

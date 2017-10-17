@@ -140,4 +140,53 @@ export class CommonService {
       }
     }
   }
+
+  objectSize(obj) {
+      let size = 0, key;
+      if (obj) {
+          for (key in obj) {
+              if (obj.hasOwnProperty(key)) {
+                size++;
+              }
+          }
+      }
+      return size;
+  }
+
+  isObjectEmpty(obj) {
+    for (const name in obj) {
+      if (obj.hasOwnProperty(name)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  ZeroPad(num, places) {
+        if (!num) {
+          num = 0;
+        }
+        return Array(Math.max(places - String(num).length + 1, 0)).join('0') + num;
+  }
+
+  AddDay(now: Date, counter: number) {
+        const d1 = new Date(now);
+        const d2 = new Date(d1);
+        d2.setDate(d1.getDate() + counter);
+        return d2;
+  }
+
+  AddMonth(now: Date, counter: number) {
+        const d1 = new Date(now);
+        const d2 = new Date(d1);
+        d2.setMonth(d1.getMonth() + counter);
+        return d2;
+  }
+
+  AddHour(now: Date, counter: number) {
+        const d1 = new Date(now);
+        const d2 = new Date(d1);
+        d2.setHours(d1.getHours() + counter);
+        return d2;
+  }
 }

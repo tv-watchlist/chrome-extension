@@ -24,6 +24,31 @@ export class EpisodeModel {
     api_source: string;
     api_id: ApiIdModel;
     seen: boolean;
+
+    constructor() {
+        this.episode_id = '';  // key
+        this.show_id = '';  // index
+        this.local_showtime = null; // index
+        this.name = '';
+        this.url = '';
+        this.iso8601 = '';
+        this.production_code = '';
+        this.runtime = 0;
+        this.season = 0;
+        this.number = 0;
+        this.counter = 0;
+        this.special = false;
+        this.guest_stars = '';
+        this.director = '';
+        this.writer = '';
+        this.summary = '';
+        this.image = new ImageModel();
+        this.seen = false;
+        this.previous_id = null;
+        this.next_id = null;
+        this.api_source = '';
+        this.api_id = new ApiIdModel();
+    }
 }
 //  test:EpisodeModel =  {"episode_id":"tvmaze1264_0001_0001_0001",
 //   "show_id":"tvmaze1264",

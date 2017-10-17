@@ -31,15 +31,4 @@ export class Settings {
     this.custom_shows_order = [];
     this.dropbox_file_path = '/tv-watchlist-db.txt';
   }
-
-  setUIModel() {
-    this.ui = {
-        'runningUnseen': { 'cssText': '' },
-        'runningSeen': { 'cssText': '' },
-        'tbaUnseen': { 'cssText': '' },
-        'tbaSeen': { 'cssText': '' },
-        'completedUnseen': { 'cssText': '' },
-        'completedSeen': { 'cssText': '' }
-    };
-  }
 }

@@ -1,3 +1,56 @@
-<h1>
-  {{title}}
-</h1>
+
+<div id="headbar">
+  <img src="assets/tv-watchlist-48.png" id="headImg" alt="" /> &nbsp;
+  <span class="heading">TV WatchList</span>
+  <img src="assets/ajax-loader.gif" id="ajax-loader-gif" class="display_none" style="position: relative;top: -10px;left: 20px;" alt="loading..." />
+  <div style="width: 125px;float:right;position: relative;top:-2px;">
+      <div class="btnIcons" style="width:26px;height:26px;float:left;margin:0 1px 0 1px;">
+          <img src="assets/Help-browser.svg" class="helpImg" title="Help" alt="Help" style="width:24px;height:24px" />
+      </div>
+      <div class="btnIcons" style="width:26px;height:26px;float:left;margin:0 1px 0 1px;">
+          <img src="assets/cloud.png" class="cloudImg" title="Save to cloud" alt="Save to cloud" style="width:24px;height:24px" />
+      </div>
+      <div class="btnIcons" style="width:26px;height:26px;float:left;margin:0 1px 0 1px;">
+          <img src="assets/Bulb.png" class="bulbImg" title="Show Highlights" alt="Show Highlights" style="width:24px;height:24px" />
+      </div>
+      <div class="btnIcons" style="width:26px;height:26px;float:left;margin:0 1px 0 1px;">
+          <img src="assets/Tools-spanner-hammer.svg" class="settingsImg" title="Settings" alt="Settings" style="width:24px;height:24px" />
+      </div>
+  </div>
+  <div style="position:absolute;top:2px;z-index:2;text-align:center;width:100%;">
+    <span id="myTvQStatus" style="margin:0px auto;">Status...</span>
+  </div>
+</div>
+
+<div id="OuterSavedList">
+  <div id="SavedList">
+    <div style="margin:5px;">
+        Create watchlist by searching for tv show names.
+    </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
+    </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.runningSeen.cssText"></tvq-show-summary-banner>
+    </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.tbaUnseen.cssText"></tvq-show-summary-banner>
+    </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.tbaSeen.cssText"></tvq-show-summary-banner>
+    </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.completedUnseen.cssText"></tvq-show-summary-banner>
+    </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.completedSeen.cssText"></tvq-show-summary-banner>
+    </div>
+  </div>
+</div>
+<input type="search" id="search" placeholder="search tv show names" style="width:95%;" />
+<a href='#' id='searchCancel' title='close search'>&#10008;</a>
+<div id="OuterSearch">
+  <div id="Search">
+    <span style="margin:10px;display:block;">Type tv show name in search bar and press enter.</span>
+  </div>
+</div>

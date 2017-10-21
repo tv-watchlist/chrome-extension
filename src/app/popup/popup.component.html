@@ -5,34 +5,30 @@
             <span class="heading">TV WatchList</span>
         </div>
         <div class="col-5 text-right">
-            <a class="btn btn-outline-dark btn-sm" href="#" role="button">
+            <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Help">
                 <i class="fa fa-question-circle fa-fw fa-lg"></i>
             </a>
-            <a class="btn btn-outline-dark btn-sm" href="#" role="button">
+            <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Save to cloud">
                 <i class="fa fa-cloud-upload fa-fw fa-lg"></i>
             </a>
-            <a class="btn btn-outline-dark btn-sm" href="#" role="button">
+            <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Show Highlights">
                 <i class="fa fa-lightbulb-o fa-fw fa-lg"></i>
             </a>
-            <a class="btn btn-outline-dark btn-sm" href="#" role="button">
+            <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Settings">
                 <i class="fa fa-cog fa-fw fa-lg"></i>
             </a>
         </div>
     </div>
     <div class="row">
-        <div class="col">
+        <div class="col d-none">
             <div class="d-flex justify-content-center">Status...</div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
             <div class="d-flex justify-content-center">
                 Create watchlist by searching for tv show names.
             </div>
         </div>
     </div>
     <!-- ShowList Output -->
-    <div class="row">
+    <div class="row" [@collapse-up]="displayShows">
         <div class="col pl-0 pr-0">
             <div class="ShowListContainer">
                 <div class="row">
@@ -95,29 +91,31 @@
         </div>
     </div>
     <div class="row mt-2 mb-2">
-        <div class="col-11 pl-0 pr-0">
+        <div class="col-11 pl-0 pr-0" [ngClass]="{'col-11':displaySearch !== 'closed','col':displaySearch === 'closed'}">
             <label class="sr-only" for="inlineFormInput">Search</label>
             <div class="input-group">
                 <div class="input-group-addon form-control-sm">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </div>
-                <input type="search" class="form-control form-control-sm" placeholder="search tv show names" />
+                <input type="search" class="form-control form-control-sm" placeholder="Search TV Show names" (click)="displaySearch = 'open'; displayShows = 'closed';" />
             </div>
         </div>
-        <div class="col-1 pl-0 pr-0 text-right">
-            <a class="btn btn-outline-dark btn-sm" href="#" role="button">
+        <div class="col-1 pl-0 pr-0 text-right" *ngIf="displaySearch !== 'closed'">
+            <a class="btn btn-outline-dark btn-sm" role="button" title="Close search" (click)="displaySearch = 'closed'; displayShows = 'open';">
                 <i class="fa fa-sign-out fa-lg"></i>
             </a>
         </div>
     </div>
     <!-- Search Output -->
-    <div class="row">
+    <div class="row" [@collapse-down]="displaySearch">
         <div class="col pl-0 pr-0">
-                <div class="d-flex justify-content-center">
-                        Type TV Show name in search bar and press enter.
-                    </div>
-            <div class="ShowListContainer">
-                <!-- Output -->
+            <div class="d-flex justify-content-center" *ngIf="!searchList || searchList.length == 0">
+                Type TV Show name in search bar and press enter.
+            </div>
+            <div class="ShowListContainer" *ngIf="!!searchList && searchList.length > 0">
+                <div *ngFor="let search of searchList">
+                    <tvq-search-summary [searchModel]="search"></tvq-search-summary>
+                </div>
             </div>
         </div>
     </div>

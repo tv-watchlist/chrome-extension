@@ -15,7 +15,8 @@ export class ShowSummaryBannerComponent implements OnChanges {
   @Input() bannerUrl: string;
   @Input() containerStyle: string;
   @Input() compact: boolean;
-
+  showName = 'Arrow';
+  showTime = 'Thu 9:00 PM, Oct 19th, 2017';
   constructor() {
     this.id = `ssb${ssbCounter++}`;
     this.styleMap = {};

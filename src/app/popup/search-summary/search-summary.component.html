@@ -1,0 +1,17 @@
+<div class="row mb-2">
+    <div class="col">
+        <img class="float-left mr-2" [src]="searchModel.poster" style="width:100px;" />
+        <div class="align-middle">
+            <a style="font-size:large" href="#" title="Add to Watch List">
+                <span [innerHtml]="searchModel.showName"></span>
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </a>
+            <div class="font-weight-bold" style="font-size:small"> {{searchModel.channel}} ({{searchModel.showTime}}) {{searchModel.showStatus}}
+                <a style="font-size:large" href="#" title="Open show summary in a new tab" style="cursor:pointer;">
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div [innerHtml]="searchModel.summary"></div>
+        </div>
+    </div>
+</div>

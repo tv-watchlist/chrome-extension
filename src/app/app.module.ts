@@ -10,6 +10,7 @@ import { OptionsComponent } from './options/options.component';
 import { NavBarComponent } from './options/nav-bar/nav-bar.component';
 import { BackgroundComponent } from './background/background.component';
 import { PopupComponent } from './popup/popup.component';
+import { SearchSummaryComponent } from './popup/search-summary/search-summary.component';
 import { NotFoundComponent } from './not-found.component';
 import { DropboxComponent } from './dropbox/dropbox.component';
 import { ShowManagerComponent } from './options/show-manager/show-manager.component';
@@ -140,6 +141,7 @@ export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataMani
     DropboxComponent,
     ShowSummaryBannerComponent,
     ShowDetailComponent,
+    SearchSummaryComponent,
     EpisodeListComponent
   ],
   imports: [

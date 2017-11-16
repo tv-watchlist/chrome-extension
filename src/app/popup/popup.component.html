@@ -12,7 +12,7 @@
                 <i class="fa fa-cloud-upload fa-fw fa-lg"></i>
             </a>
             <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Show Highlights">
-                <i class="fa fa-lightbulb-o fa-fw fa-lg"></i>
+                <i class="fa fa-lightbulb fa-fw fa-lg"></i>
             </a>
             <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Settings">
                 <i class="fa fa-cog fa-fw fa-lg"></i>
@@ -27,18 +27,19 @@
             </div>
         </div>
     </div>
+    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+        <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
+    </div>
     <!-- ShowList Output -->
     <div class="row" [@collapse-up]="displayShows">
         <div class="col pl-0 pr-0">
             <div class="ShowListContainer">
                 <div class="row">
                     <div class="col pl-0 pr-0">
-                        <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
-                            <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
-                        </div>
+                        
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col pl-0 pr-0">
                         <div *ngIf="!!settings.ui && settings.ui.runningSeen">
                             <tvq-show-summary-banner [containerStyle]="settings.ui.runningSeen.cssText"></tvq-show-summary-banner>
@@ -72,21 +73,7 @@
                             <tvq-show-summary-banner [containerStyle]="settings.ui.completedSeen.cssText"></tvq-show-summary-banner>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col pl-0 pr-0">
-                        <div *ngIf="!!settings.ui && settings.ui.completedUnseen">
-                            <tvq-show-summary-banner [containerStyle]="settings.ui.completedUnseen.cssText"></tvq-show-summary-banner>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col pl-0 pr-0">
-                        <div *ngIf="!!settings.ui && settings.ui.completedSeen">
-                            <tvq-show-summary-banner [containerStyle]="settings.ui.completedSeen.cssText"></tvq-show-summary-banner>
-                        </div>
-                    </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

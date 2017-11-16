@@ -1,115 +1,12 @@
-<div class="showContainer" [ngStyle]="styleMap" (mouseenter)="menter()" (mouseleave)="mleave()">
-    <div [ngClass]="{'glass': !!bannerUrl,'noglass':!bannerUrl}" [style.minHeight.px]="compact ? '25':'65'">
-        <details>
-            <!--open-->
-            <summary class="boldText">
-                <span style="font-weight:bold;" [innerHtml]="showName"></span> ({{showTime}})
-                <a title="Mark all episodes as Seen" class="txtStyle txtFillGreen">
-                    <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
-                </a>
-                <a title="Remove from WatchList" class="txtStyle txtFillRed">
-                    <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>                            
-                </a>
-            </summary>
-            <div><span style="font-style:italic;">Details:</span> 117.(6x2) Tribute</div>
-            <div><span style="font-style:italic;">Prev Episode:</span> (Thu, Oct 12th, 2017) 116.(6x1) Fallout</div>
-            <div>The CW, Scripted, Drama, Action, Science-Fiction
-                <a title="Force Update Now" class="txtStyle txtFillRed">
-                    <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>                            
-                </a>
+<div class="row showContainer" [ngStyle]="styleMap" (mouseenter)="menter()" (mouseleave)="mleave()">
+    <div class="col" [ngClass]="{'glass': !!bannerUrl, 'noglass':!bannerUrl}" [style.minHeight.px]="compact ? '25':'65'">
+        <div class="row mt-1">
+            <div class="col">
+                <i class="fa fa-play" aria-hidden="true"></i> 
+                <span class="font-weight-bold">The Blacklist</span> (Wed 8:00 PM, Oct 25th, 2017) 
+                <i class="fa fa-eye fa-fw fa-lg txtStyle txtFillRed"></i>
+                <i class="fa fa-trash-alt fa-fw fa-lg text-danger"></i>
             </div>
-        </details>
-        <div style="display:none;background-color:pink;width:150px;-webkit-border-radius: 5px;padding: 5px;margin:5px 0 5px 0;-webkit-box-shadow: 3px 3px 3px #aaaaaa;">Are you sure?
-            <a href="#" id="delconfirm_link_tvmaze4" data-name="Arrow" style="color:red">Yes</a> |
-            <a href="#" id="dontdel_link_tvmaze4" style="color:green">No</a>
         </div>
-        <div>
-            <select id="dd_show_id_tvmaze4" title="Arrow" style="width:440px" data-show_id="tvmaze4">
-                <optgroup label="Season 3">
-                    <option value="tvmaze4_0055_0003_0009" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Dec 10th, 2014
-                    Nyssa returns to Starling City and tells Oliver that her father, Ra's al Ghul has given Oliver 48 hours to find Sara's killer or the League of Assassins will start killing the citizens of Starling City. Laurel is stunned when her father delivers a very special Christmas gift - her mother, Dinah. Meanwhile, Ray tries to make amends with Felicity and Oliver sets a meeting with Ra's al Ghul.">55.(3x9) The Climb</option>
-                                    <option value="tvmaze4_0056_0003_0010" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Jan 21st, 2015
-                    In the aftermath of Oliver's fight with Ra's al Ghul, Diggle and Arsenal continue to protect the city in the Arrow's absence. However, after three days without hearing from Oliver, they begin to fear the worst may have happened to their friend. Felicity refuses to believe that Oliver could be dead until Merlyn pays the team a surprise visit. Thea suspects there is something more behind Oliver's disappearance and asks Merlyn for a favor. Meanwhile, Ray tests a part of his new suit and Laurel takes up the mantle of the Black Canary.">56.(3x10) Left Behind</option>
-                                    <option value="tvmaze4_0057_0003_0011" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Jan 28th, 2015
-                    Arsenal and Diggle confront Laurel about trying to step into her sister's shoes and warn her to stop before she gets herself killed. However, when Brick kidnaps the city's Aldermen and threatens to kill them all unless the police evacuate The Glades, it's all suits on deck. Meanwhile, Ray steps in to help Lance and the police force fight Brick, showing Felicity a new side of her boss. Malcom tells Thea that Ra's al Ghul is after him and his family and they must leave town immediately.">57.(3x11) Midnight City</option>
-                                    <option value="tvmaze4_0058_0003_0012" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Feb 4th, 2015
-                    Still operating without Oliver and desperate to stop Brick, Team Arrow is forced to consider Malcolm's offer to help shut Brick down as Malcolm has a personal score to settle with the felon. Roy and Laurel point out that the team could use some help to save the innocents of The Glades, but Felicity is adamantly against it. They look to Diggle to make the final decision. Meanwhile, the flashbacks chronicle Malcolm's descent from kind-hearted father and husband to cold-blooded killer after the murder of his wife.">58.(3x12) Uprising</option>
-                                    <option value="tvmaze4_0059_0003_0013" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Feb 11th, 2015
-                    Oliver is thrown by the changes within Team Arrow. He's used to calling the shots but sees that the team has evolved in his absence and tensions quickly escalate in the lair. Oliver is furious that Laurel has been going out as the Black Canary and tells her to stop risking her life, but when Vertigo hits the streets again, Laurel goes against Oliver's wishes and tracks down Vertigo who hits her with a full dose of the drug. Laurel's biggest fears revolve around her sister Sara so the Vertigo causes her to hallucinate an epic fight between Canary and Black Canary. Meanwhile, Chase surprises Thea, and Roy warns Thea to stay away from Malcolm.">59.(3x13) Canaries</option>
-                                    <option value="tvmaze4_0060_0003_0014" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Feb 18th, 2015
-                    Malcolm puts Oliver and Thea in a dangerous situation that lands them on Lian Yu with Oliver's former enemy, Deathstroke. A flashback reveals when Oliver and Maseo returned to Starling City to retrieve the Omega bio weapon, and despite being under strict orders from Amanda Waller not to reveal himself to anyone, Oliver looks in on his family, Laurel and Tommy.">60.(3x14) The Return</option>
-                                    <option value="tvmaze4_0061_0003_0015" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Feb 25th, 2015
-                    Malcolm is captured by Ra's al Ghul and taken to Nanda Parbat. Because of his love for Thea, Oliver considers saving Merlyn. Ray is obsessed with finishing his Atom suit so he can save the city but Felicity fears he is heading down the same path as Oliver and tries to pull him out of the lab.">61.(3x15) Nanda Parbat</option>
-                                    <option value="tvmaze4_0062_0003_0016" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Mar 18th, 2015
-                    Still weighed down by his last meeting with Ra's al Ghul, Oliver returns home to find a new villain and his crew have started terrorizing Starling City - Michael Amar AKA Murmur, a man whose mouth has been sewn shut. Meanwhile, Laurel and Nyssa bond over their issues with their fathers and Nyssa make Laurel an offer. Thea is forced to come to terms with her father after Oliver brings Malcom to the loft to recover, and Lance shuts out both Laurel and the Arrow.">62.(3x16) The Offer</option>
-                                    <option value="tvmaze4_0063_0003_0017" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Mar 25th, 2015
-                    It's celebration time as Diggle and Lyla get married. However, Deadshot interrupts their honeymoon and tells them the Suicide Squad has been given a new mission - rescue United States Senator Joseph Cray from a hostage situation in the Republic of Kasnia. Amanda Waller breaks down the mission and introduces them to the newest member of the Suicide Squad, Cupid. Meanwhile, Oliver learns about Ray's new Atom costume and the two have a heated stand-off. Felicity and Ray hit a rough patch. J">63.(3x17) Suicidal Tendencies</option>
-                                    <option value="tvmaze4_0064_0003_0018" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Apr 1st, 2015
-                    During an attack on the mayor's office, Ray is critically injured. Felicity is pleasantly surprised when her mother, Donna Smoak, shows up at the hospital to offer her support. With the SCPD out in full force looking for the assailant, Oliver and his team work hard to stay one step ahead of the police to find the man responsible. However, things come to a head when Ra's al Ghul kidnaps Captain Lance.">64.(3x18) Public Enemy</option>
-                                    <option value="tvmaze4_0065_0003_0019" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Apr 15th, 2015
-                    Lance continues his mission to take down the Arrow so Felicity orders Oliver to keep a low profile. However, when a meta-human named Jake Simmons, who kills people with blasts of energy and plasma, starts terrorizing Starling City, Oliver is forced to ask Ray for help. The unlikely duo is forced to team up to save the city.">65.(3x19) Broken Arrow</option>
-                                    <option value="tvmaze4_0066_0003_0020" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Apr 22nd, 2015
-                    Ra's al Ghul finally makes Oliver an offer he can't refuse. The team joins Oliver on his journey to Nanda Parbat where a heartbroken Felicity decides to take matters into her own hands.">66.(3x20) The Fallen</option>
-                                    <option value="tvmaze4_0067_0003_0021" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, Apr 29th, 2015
-                    Oliver goes through a rigorous transformation. The League of Assassins sets their sites on Nyssa, who is back in Starling City training Laurel. When Nyssa realizes they are coming, she arms up to face them alone but Laurel asks Felicity and Diggle to help protect her new friend.">67.(3x21) Al Sah-Him</option>
-                                    <option value="tvmaze4_0068_0003_0022" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, May 6th, 2015
-                    Oliver/Al Sah-him finishes his training and is left with two final tasks to become the next Ra's al Ghul. Ra's threatens Nyssa and delivers some shocking news. Meanwhile, Malcolm makes a surprising offer to Team Arrow and Thea goes to see Roy.">68.(3x22) This is Your Sword</option>
-                                    <option value="tvmaze4_0069_0003_0023" data-seen="false" title="Arrow Season 3
-                    Wed 8:00 PM, May 13th, 2015
-                    With time running out for Starling City, Oliver tries to stop Ra's from unleashing the bioweapon and killing millions.">69.(3x23) My Name is Oliver Queen</option>
-                                </optgroup>
-                                
-                                <optgroup label="Season 6">
-                                    <option value="tvmaze4_0116_0006_0001" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Oct 12th, 2017
-                    Five months later, Oliver adapts to a new role while Black Siren launches an attack on the police and the team.">116.(6x1) Fallout</option>
-                                </optgroup>
-                                <optgroup label="**UNAIRED**">
-                                    <option value="tvmaze4_0117_0006_0002" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Oct 19th, 2017
-                    Oliver tries to balance being the mayor, the Green Arrow and a father to William. Anatoly returns to Star City with a deadly agenda.">117.(6x2) Tribute</option>
-                                    <option value="tvmaze4_0118_0006_0003" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Oct 26th, 2017
-                    A rogue black ops team led by Onyx breaks into Kord Industries and steals something lethal. Oliver struggles to connect with William so he reaches out to a surprising source for help.">118.(6x3) Next of Kin</option>
-                                    <option value="tvmaze4_0119_0006_0004" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Nov 2nd, 2017
-                    Just as Oliver starts to get things in order, Black Siren launches another attack on the citizens of Star City.">119.(6x4) Reversal</option>
-                                    <option value="tvmaze4_0120_0006_0005" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Nov 9th, 2017">120.(6x5) Deathstroke Returns</option>
-                                    <option value="tvmaze4_0121_0006_0006" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Nov 16th, 2017">121.(6x6) Promises Kept</option>
-                                    <option value="tvmaze4_0122_0006_0007" data-seen="false" title="Arrow Season 6
-                    Thu 9:00 PM, Nov 23rd, 2017">122.(6x7) Thanksgiving</option>
-                                    <option value="tvmaze4_0123_0006_0008" data-seen="false" title="Arrow Season 6
-                    Mon 9:00 PM, Nov 27th, 2017">123.(6x8) Crisis on Earth-X, Part 2</option>
-                </optgroup>
-            </select>   
-            <a title="Mark selected episode as seen">
-                <i class="fa fa-play fa-lg txtFillRed" aria-hidden="true"></i>                            
-            </a>
-            <a title="Open show summary in a new tab">
-                <i class="fa fa-external-link fa-lg txtFillRed" aria-hidden="true"></i>                            
-            </a>
-        </div>
-        <div style="display: block;">
-            <span style="float:right;font-size:0.7em">Next Show: Tomorrow</span>
-            <span style="float:left;font-size:0.7em">Unseen: 62</span>
-            <span style="clear:both;"></span>
-        </div>
-        <div style="clear:both;"></div>        
     </div>
 </div>

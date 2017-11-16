@@ -20,12 +20,15 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "tvq",
       "styles": [
-        "../node_modules/font-awesome/css/font-awesome.min.css",
         "../node_modules/primeng/resources/primeng.min.css",
         "../node_modules/primeng/resources/themes/bootstrap/theme.css",
         "styles.scss"
       ],
       "scripts": [
+        "fontawesome-pro/fontawesome.js",
+        "fontawesome-pro/light.js",
+        "fontawesome-pro/regular.js",
+        "fontawesome-pro/solid.js",
         "../node_modules/jquery/dist/jquery.js",
         "../node_modules/tether/dist/js/tether.js",
         "../node_modules/popper.js/dist/umd/popper.js",  

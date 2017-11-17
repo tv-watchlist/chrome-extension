@@ -19,7 +19,7 @@
             </a>
         </div>
     </div>
-    
+
     <!-- ShowList Output -->
     <div class="row" [@collapse-up]="displayShows">
         <div class="col pl-0 pr-0">
@@ -73,20 +73,21 @@
             </div>
         </div>
     </div>
-    <div class="row mt-2 mb-2">
-        <div class="col-11 pl-0 pr-0" [ngClass]="{'col-11':displaySearch !== 'closed','col':displaySearch === 'closed'}">
+    <div class="row my-2">
+        <div class="col d-flex justify-content-between px-0">
             <label class="sr-only" for="inlineFormInput">Search</label>
             <div class="input-group">
                 <div class="input-group-addon form-control-sm">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </div>
-                <input type="search" class="form-control form-control-sm" placeholder="Search TV Show names" (click)="displaySearch = 'open'; displayShows = 'closed';" />
+                <input type="search" class="form-control form-control-sm" placeholder="Search TV Show names" (click)="displaySearch = 'open'; displayShows = 'closed';"
+                />
             </div>
-        </div>
-        <div class="col-1 pl-0 pr-0 text-right" *ngIf="displaySearch !== 'closed'">
-            <a class="btn btn-outline-dark btn-sm" role="button" title="Close search" (click)="displaySearch = 'closed'; displayShows = 'open';">
-                <i class="fa fa-sign-out fa-lg"></i>
-            </a>
+            <span class="ml-1" *ngIf="displaySearch !== 'closed'">
+                <a class="btn btn-outline-dark btn-sm" role="button" title="Close search" (click)="displaySearch = 'closed'; displayShows = 'open';">
+                    <i class="fa fa-sign-out fa-lg"></i>
+                </a>
+            </span>
         </div>
     </div>
     <!-- Search Output -->

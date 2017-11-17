@@ -4,7 +4,7 @@
             <img src="assets/tv-watchlist-48.png" class="heading_logo" alt="" />
             <span class="heading">TV WatchList</span>
         </div>
-        <div class="col-5 text-right">
+        <div class="col-5 pr-0 text-right">
             <a class="btn btn-outline-dark btn-sm" href="#" role="button" title="Help">
                 <i class="fa fa-question-circle fa-fw fa-lg"></i>
             </a>
@@ -19,25 +19,21 @@
             </a>
         </div>
     </div>
-    <div class="row">
-        <div class="col d-none">
-            <div class="d-flex justify-content-center">Status...</div>
-            <div class="d-flex justify-content-center">
-                Create watchlist by searching for tv show names.
-            </div>
-        </div>
-    </div>
-    <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
-        <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
-    </div>
+    
     <!-- ShowList Output -->
     <div class="row" [@collapse-up]="displayShows">
         <div class="col pl-0 pr-0">
             <div class="ShowListContainer">
                 <div class="row">
-                    <div class="col pl-0 pr-0">
-                        
+                    <div class="col d-none">
+                        <div class="d-flex justify-content-center">Status...</div>
+                        <div class="d-flex justify-content-center">
+                            Create watchlist by searching for tv show names.
+                        </div>
                     </div>
+                </div>
+                <div *ngIf="!!settings.ui && settings.ui.runningUnseen">
+                    <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
                 </div>
                 <!-- <div class="row">
                     <div class="col pl-0 pr-0">

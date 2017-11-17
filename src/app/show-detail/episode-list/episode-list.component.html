@@ -5,7 +5,7 @@
         <a data-toggle="collapse" data-parent="#accordion" [href]="'#season'+seasonNum"  [attr.aria-expanded]="seasonNum == openSeason" [attr.aria-controls]="'season'+seasonNum" >
            Season {{seasonNum}} 
         </a>
-        <button [style.visibility]="getToggleState('buttonSeason',seasonNum)? 'visible':'hidden'" type="button" (click)="setSeasonSeen(seasonNum)" class="btn btn-secondary btn-sm" title="toggle seen"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+        <button [style.visibility]="getToggleState('buttonSeason',seasonNum)? 'visible':'hidden'" type="button" (click)="setSeasonSeen(seasonNum)" class="btn btn-outline-dark btn-sm" title="toggle seen"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
       </h5>
     </div>
     <div [id]="'season'+seasonNum" class="collapse" [class.show]="seasonNum == openSeason"  role="tabpanel" [attr.aria-labelledby]="'heading'+seasonNum">
@@ -13,7 +13,7 @@
           <div *ngFor="let episode of episodeList[seasonNum]" 
                 (mouseenter)="setToggleState('buttonEpisode',episode.id, true)" 
                 (mouseleave)="setToggleState('buttonEpisode',episode.id,false)"
-                class="list-group-item flex-column align-items-start rounded-0" 
+                class="list-group-item d-flex flex-column align-items-start rounded-0" 
                 [class.list-group-item-danger]="episode.isunaired && episode.id != highLightNextEpisode" 
                 [class.list-group-item-info]="episode.isunaired && episode.id == highLightNextEpisode">
               <div class="d-flex w-100 justify-content-between">
@@ -22,10 +22,10 @@
                 </a>
                 <span>
                   <button [style.visibility]="getToggleState('buttonEpisode',episode.id) ? 'visible':'hidden'" type="button"
-                          (click)="setToggleSeen(seasonNum, episode)" class="btn btn-secondary btn-sm" title="toggle seen">
+                          (click)="setToggleSeen(seasonNum, episode)" class="btn btn-outline-dark btn-sm" title="toggle seen">
                           <i class="fa fa-lg" [ngClass]="{'fa-eye-slash':episode.seen, 'fa-eye':!episode.seen}" aria-hidden="true"></i></button>
                   <button [style.visibility]="getToggleState('buttonEpisode',episode.id) ? 'visible':'hidden'" type="button" 
-                          (click)="getExternal(seasonNum, episode)" class="btn btn-secondary btn-sm" title="external link">
+                          (click)="getExternal(seasonNum, episode)" class="btn btn-outline-dark btn-sm" title="external link">
                           <i class="fa fa-external-link fa-lg" aria-hidden="true"></i></button>
                 </span>
               </div>

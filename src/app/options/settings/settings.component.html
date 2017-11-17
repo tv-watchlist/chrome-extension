@@ -2,20 +2,20 @@
   <div class="row">
     <div class="col-9">
       <ul class="list-group mb-4" *ngIf="selectedGroup==='preferences'">
-        <li class="list-group-item flex-column align-items-start">
+        <li class="list-group-item d-flex flex-column align-items-start">
           <h4>Preferences</h4>
           <p>Set your TV Watchlist preferences here</p> 
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Enable Automatic update of show.  
           <tvq-switch [(ngModel)]="settings.auto_update" (ngModelChange)="Save('auto_update')"></tvq-switch>
         </li>
-        <li class="list-group-item flex-column align-items-center">
-          <div class="d-flex w-100 justify-content-between mb-3">
+        <li class="list-group-item d-flex flex-column align-items-center">
+          <div class="d-flex justify-content-between w-100 mb-3">
             Enable Notification for each show. 
             <tvq-switch [(ngModel)]="settings.enable_notification" (ngModelChange)="Save('enable_notification')"></tvq-switch>
           </div>
-          <div class="d-flex w-100 justify-content-between">
+          <div class="d-flex justify-content-between w-100">
             Notify me 
             <select name="notify_before" class="form-control-sm d-inline" [(ngModel)]="settings.notify_before" (ngModelChange)="Save('notify_before')">
               <option value="0">every day</option>
@@ -27,33 +27,33 @@
           </select>
           </div>
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Animate icon when updating. 
           <tvq-switch [(ngModel)]="settings.animate_icon" (ngModelChange)="Save('animate_icon')"></tvq-switch>
         </li>
-        <li class="list-group-item flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
+        <li class="list-group-item d-flex flex-column align-items-start">
+          <div class="d-flex justify-content-between w-100">
             Compact view for show list.
             <tvq-switch [(ngModel)]="settings.compact_flag" (ngModelChange)="Save('compact_flag')"></tvq-switch>
           </div>
           <small class="text-muted">(if enabled, click to expand, double click to shrink again)</small>
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Display Show Banner.  
           <tvq-switch [(ngModel)]="settings.enable_banner" (ngModelChange)="Save('enable_banner')"></tvq-switch>
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Hide Seen Episodes.
           <tvq-switch [(ngModel)]="settings.hide_seen" (ngModelChange)="Save('hide_seen')"></tvq-switch>
         </li>
-       <li class="list-group-item flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
+       <li class="list-group-item d-flex flex-column align-items-start">
+          <div class="d-flex justify-content-between w-100">
              Hide Seen TBA and Complete Shows.
             <tvq-switch [(ngModel)]="settings.hide_tba" (ngModelChange)="Save('hide_tba')"></tvq-switch>
           </div>
           <small class="text-muted">(also hide unaired shows greater than 1 month)</small> 
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Limit to only current shows running:
           <select name="running_days_limit" class="form-control-sm d-inline" [(ngModel)]="settings.running_days_limit" (ngModelChange)="Save('running_days_limit')">
               <option value="0">None</option>
@@ -64,7 +64,7 @@
           </select>
           <!--<input type="number" name="running_days_limit" class="form-control form-control-sm w-25" min="0" max="30" step="1" value="0" [(ngModel)]="settings.running_days_limit" (change)="Save('running_days_limit')">-->
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Display unseen count on icon for:
           <select  name="badge_flag" class="form-control-sm d-inline" [(ngModel)]="settings.badge_flag" (ngModelChange)="Save('badge_flag')">
               <option value="shows">Shows</option>
@@ -72,8 +72,8 @@
               <option value="greyscale">Or display blank screen for seen.</option>
           </select>
         </li>
-        <li class="list-group-item flex-column align-items-end">
-          <div class="d-flex w-100 justify-content-between mb-3">
+        <li class="list-group-item d-flex flex-column align-items-end">
+          <div class="d-flex justify-content-between w-100 mb-3">
              List shows By
             <select name="shows_order" class="form-control-sm d-inline" [(ngModel)]="settings.shows_order" (ngModelChange)="Save('shows_order')">
                     <option value="airdate">Air Date</option>
@@ -83,23 +83,23 @@
                     <option value="custom_logic">Custom Logic</option>
                 </select>
           </div>
-          <button id="btn_shows_order_custom" class="btn btn-secondary btn-sm">Create Custom Order</button>
+          <button id="btn_shows_order_custom" class="btn btn-outline-dark btn-sm">Create Custom Order</button>
         </li>
-        <li class="list-group-item justify-content-between">
-          Check for Updates <button class="btn btn-secondary btn-sm">Refresh All Watchlist</button> 
+        <li class="list-group-item d-flex justify-content-between">
+          Check for Updates <button class="btn btn-outline-dark btn-sm">Refresh All Watchlist</button> 
         </li>
-        <li class="list-group-item justify-content-between">
-         Share your showList to your favorite social network <button class="btn btn-secondary btn-sm">Copy showlist to clipboard</button>
+        <li class="list-group-item d-flex justify-content-between">
+         Share your showList to your favorite social network <button class="btn btn-outline-dark btn-sm">Copy showlist to clipboard</button>
         </li>
       </ul>
       <ul class="list-group mb-4" *ngIf="selectedGroup==='timezone'">
-        <li class="list-group-item flex-column align-items-start">
+        <li class="list-group-item d-flex flex-column align-items-start">
           <h4>Timezone</h4>
           <p>All TV Show times with selected countries below will be effected
                 by their corresponding offset (in hours).<br/> Example :- American shows are based on Eastern Time. If you
                 are in Pacific Time, Add +3 hours to United States.</p> 
         </li>
-        <li class="list-group-item flex-column align-items-center">
+        <li class="list-group-item d-flex flex-column align-items-center">
           <table>
               <thead>
                   <tr>
@@ -118,25 +118,25 @@
                           <option [value]="obj.key" *ngFor="let obj of countries">{{obj.value}}</option>
                         </select></td>
                       <td><input #timezone_offset class="form-control form-control-sm" type="number" min="-24.0" max="24.0" step="0.5" value="0" /></td>
-                      <td><button id="timezone_add" (click)="AddTimezone(timezone_country,timezone_offset)" class="btn btn-secondary btn-sm">Add</button></td>
+                      <td><button id="timezone_add" (click)="AddTimezone(timezone_country,timezone_offset)" class="btn btn-outline-dark btn-sm">Add</button></td>
                   </tr>
               </tbody>
             </table>
         </li>
       </ul>
       <ul class="list-group mb-4" *ngIf="selectedGroup==='backup-restore'">
-        <li class="list-group-item flex-column align-items-start">
+        <li class="list-group-item d-flex flex-column align-items-start">
           <h4>Backup &amp; Restore</h4>
           <p>
             Click 'Download' link to save all your shows and settings to your computer. <br>
             Click 'Browse' to load the saved shows and settings in TV Watchlist.
           </p>
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Create Backup
-           <button class="btn btn-secondary btn-sm" (click)="downloadBackup()">Download</button> 
+           <button class="btn btn-outline-dark btn-sm" (click)="downloadBackup()">Download</button> 
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Restore Backup
            <label class="custom-file form-control-sm d-inline">
               <input type="file" id="file" class="custom-file-input" (change)="restoreBackup($event)">
@@ -145,25 +145,25 @@
         </li>
       </ul>
       <ul class="list-group mb-4" *ngIf="selectedGroup==='cloud-services'">
-        <li class="list-group-item flex-column align-items-start">
+        <li class="list-group-item d-flex flex-column align-items-start">
           <h4>Cloud Services</h4>
           <p>Share same information between multiple computers by Syncing TV Watchlist data to cloud.
           </p> 
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           Dropbox File path
           <input type="text" class="form-control form-control-sm w-50" [(ngModel)]="settings.dropbox_file_path" (change)="Save('dropbox_file_path')"/>
         </li>
-        <li class="list-group-item justify-content-between">
+        <li class="list-group-item d-flex justify-content-between">
           <a href="http://db.tt/ZNg9jmP" target="_blank" title="Dont have Dropbox account? Click to signup, They have free 2GB service"><img src="https://www.dropbox.com/static/images/new_logo.png" /></a>
-          <button [disabled]="isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxLogin()">Login</button>
-          <button [disabled]="!isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxUpload()">Save to cloud</button>
-          <button [disabled]="!isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxDownload()">Load from cloud</button>
-          <button [disabled]="!isDropboxAuthenticated" class="btn btn-secondary btn-sm" (click)="DropboxLogout()">Logout</button>
+          <button [disabled]="isDropboxAuthenticated" class="btn btn-outline-dark btn-sm" (click)="DropboxLogin()">Login</button>
+          <button [disabled]="!isDropboxAuthenticated" class="btn btn-outline-dark btn-sm" (click)="DropboxUpload()">Save to cloud</button>
+          <button [disabled]="!isDropboxAuthenticated" class="btn btn-outline-dark btn-sm" (click)="DropboxDownload()">Load from cloud</button>
+          <button [disabled]="!isDropboxAuthenticated" class="btn btn-outline-dark btn-sm" (click)="DropboxLogout()">Logout</button>
         </li>
       </ul>
       <ul class="list-group mb-4" *ngIf="selectedGroup==='link-override'">
-        <li class="list-group-item flex-column align-items-start">
+        <li class="list-group-item d-flex flex-column align-items-start">
           <h4>Link Override</h4>
           <p>You can use <a href='http://en.wikipedia.org/wiki/Bookmarklet' target="_blank">Bookmarklets</a>,
           Or You can add customized link <br /> i.e: http://www.google.com/search?btnI=1&q={{'{show_name.slug()}'}}+official+website
@@ -175,13 +175,13 @@
                 <br /><span class="boldText">Placeholder helpers:</span>( .slug() .lpad(2) .format('yyyy-mm-dd'))
           </p> 
         </li>
-        <li class="list-group-item flex-column align-items-end">
+        <li class="list-group-item d-flex flex-column align-items-end">
           <textarea class="form-control mb-3" name="override_episode_summary_link" [(ngModel)]="settings.override_episode_summary_link" rows="5"></textarea>
-          <button class="btn btn-secondary btn-sm" (click)=SaveLink()>Override Episode Link</button>
+          <button class="btn btn-outline-dark btn-sm" (click)=SaveLink()>Override Episode Link</button>
         </li>
       </ul>
       <ul class="list-group mb-4" *ngIf="selectedGroup==='popup-color-scheme'">
-        <li class="list-group-item flex-column align-items-start">
+        <li class="list-group-item d-flex flex-column align-items-start">
           <h4>Popup Color Scheme</h4><span>Warning: Banner is enabled. Below color scheme will not be shown</span>
           <p>Change the default background and font colors of the popup show container <br>
             Resources to get you going: 
@@ -192,62 +192,62 @@
             <a href='http://gradients.glrzad.com/' class='advanced_css_examples' target='_blank'>CSS3 Gradient Generator 2</a>
           </p>
         </li>
-        <li class="list-group-item flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
+        <li class="list-group-item d-flex flex-column align-items-start">
+          <div class="d-flex justify-content-between w-100">
              Advanced CSS hack 
           <tvq-switch [(ngModel)]="showAdvancedCssHack"></tvq-switch>
           </div>
           <small class="text-muted">(Only Properties which contains background or colors are hackable.)</small> 
         </li>
-        <li class="list-group-item justify-content-between">
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('default')">Default Scheme</button>
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('cool-patterns')">Cool Patterns</button>
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('easter')">Easter</button>
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('halloween')">Halloween</button>
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('christmas')">Christmas</button>
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('valentine')">Valentine</button>
-          <button class="btn btn-secondary btn-sm" (click)="PreviewColor('saint-patrick-day')">Saint Patrick's Day</button>
+        <li class="list-group-item d-flex justify-content-between">
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('default')">Default Scheme</button>
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('cool-patterns')">Cool Patterns</button>
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('easter')">Easter</button>
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('halloween')">Halloween</button>
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('christmas')">Christmas</button>
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('valentine')">Valentine</button>
+          <button class="btn btn-outline-dark btn-sm" (click)="PreviewColor('saint-patrick-day')">Saint Patrick's Day</button>
         </li>
         <li class="list-group-item d-flex flex-column">
-          <div class="row w-100 mb-3">
-            <div class="col-6" *ngIf="!!settings.ui && settings.ui.runningUnseen">
+          <div class="row mb-3">
+            <div class="col-6 pr-4" *ngIf="!!settings.ui && settings.ui.runningUnseen">
               runningUnseen CSS:
              <textarea *ngIf="showAdvancedCssHack" class="form-control" name="runningUnseen" [(ngModel)]="settings.ui.runningUnseen.cssText" rows="2" ></textarea>
              <tvq-show-summary-banner [containerStyle]="settings.ui.runningUnseen.cssText"></tvq-show-summary-banner>
             </div>
-            <div class="col-6" *ngIf="!!settings.ui && settings.ui.runningSeen">
+            <div class="col-6 pl-4" *ngIf="!!settings.ui && settings.ui.runningSeen">
               runningSeen CSS:
              <textarea *ngIf="showAdvancedCssHack" class="form-control" name="runningSeen" [(ngModel)]="settings.ui.runningSeen.cssText" rows="2" ></textarea>
              <tvq-show-summary-banner [containerStyle]="settings.ui.runningSeen.cssText"></tvq-show-summary-banner>
             </div>
           </div>
-          <div class="row w-100  mb-3">
-            <div class="col-6" *ngIf="!!settings.ui && settings.ui.tbaUnseen">
+          <div class="row mb-3">
+            <div class="col-6 pr-4" *ngIf="!!settings.ui && settings.ui.tbaUnseen">
               tbaUnseen CSS:
               <textarea *ngIf="showAdvancedCssHack" class="form-control" name="tbaUnseen" [(ngModel)]="settings.ui.tbaUnseen.cssText" rows="2"></textarea>
               <tvq-show-summary-banner [containerStyle]="settings.ui.tbaUnseen.cssText"></tvq-show-summary-banner>
             </div>
-            <div class="col-6" *ngIf="!!settings.ui && settings.ui.tbaSeen">
+            <div class="col-6 pl-4" *ngIf="!!settings.ui && settings.ui.tbaSeen">
               tbaSeen CSS:
               <textarea *ngIf="showAdvancedCssHack" class="form-control" name="tbaSeen" [(ngModel)]="settings.ui.tbaSeen.cssText" rows="2"></textarea>
               <tvq-show-summary-banner [containerStyle]="settings.ui.tbaSeen.cssText"></tvq-show-summary-banner>
             </div>
           </div>
-          <div class="row w-100  mb-3">
-            <div class="col-6"  *ngIf="!!settings.ui && settings.ui.completedUnseen">
+          <div class="row mb-3">
+            <div class="col-6 pr-4"  *ngIf="!!settings.ui && settings.ui.completedUnseen">
               completedUnseen CSS:
               <textarea *ngIf="showAdvancedCssHack" class="form-control" name="completedUnseen" [(ngModel)]="settings.ui.completedUnseen.cssText" rows="2"></textarea>
               <tvq-show-summary-banner [containerStyle]="settings.ui.completedUnseen.cssText"></tvq-show-summary-banner>
             </div>
-            <div class="col-6"  *ngIf="!!settings.ui && settings.ui.completedSeen">
+            <div class="col-6 pl-4"  *ngIf="!!settings.ui && settings.ui.completedSeen">
               completedSeen CSS:
               <textarea *ngIf="showAdvancedCssHack" class="form-control" name="completedSeen" [(ngModel)]="settings.ui.completedSeen.cssText" rows="2"></textarea>
               <tvq-show-summary-banner [containerStyle]="settings.ui.completedSeen.cssText"></tvq-show-summary-banner>
             </div>
           </div>
-          <div class="row w-100  mb-3">
+          <div class="row mb-3">
             <div class="col-12 d-flex justify-content-end">
-              <button class="btn btn-secondary btn-sm" (click)=SaveColor()>Override Popup Color</button>
+              <button class="btn btn-outline-dark btn-sm" (click)=SaveColor()>Override Popup Color</button>
             </div>
           </div>
         </li>

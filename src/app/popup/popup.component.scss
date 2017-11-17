@@ -1,7 +1,7 @@
 :host { 
     display: block;
     min-width: 510px;
-    min-height: 200px;
+    //min-height: 200px;
     max-height: 584px;
     margin: 10px 5px 10px 10px;
     font: 13px Arial, Verdana, sans-serif;
@@ -34,7 +34,7 @@
     width:100%;
     max-height: 450px; //480px;
     overflow:auto;
-    padding:0 19px 0 16px;
+    padding:0 19px 5px 16px;
 }
 
 /* http://css-tricks.com/custom-scrollbars-in-webkit/ */

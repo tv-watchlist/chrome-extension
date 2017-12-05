@@ -16,9 +16,9 @@ import { DropboxComponent } from './dropbox/dropbox.component';
 import { ShowManagerComponent } from './options/show-manager/show-manager.component';
 import { ShowDetailComponent } from './show-detail/show-detail.component';
 import { EpisodeListComponent } from './show-detail/episode-list/episode-list.component';
-
 import { SettingsComponent } from './options/settings/settings.component';
 import { ShowSummaryBannerComponent } from './show-summary-banner/show-summary-banner.component';
+import { EpisodeDropdownListComponent } from './show-summary-banner/episode-dropdown-list/episode-dropdown-list.component';
 
 import { WidgetModule } from './widgets/widget.module';
 import {
@@ -142,7 +142,8 @@ export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataMani
     ShowSummaryBannerComponent,
     ShowDetailComponent,
     SearchSummaryComponent,
-    EpisodeListComponent
+    EpisodeListComponent,
+    EpisodeDropdownListComponent
   ],
   imports: [
     BrowserModule,

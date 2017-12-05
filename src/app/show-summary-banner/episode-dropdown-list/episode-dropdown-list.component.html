@@ -1,0 +1,7 @@
+<select class="form-control-sm w-100 mr-1" style="height:1.4rem;">
+    <optgroup *ngFor="let seasonNum of seasonNumList" 
+        [label]="'Season '+seasonNum">
+        <option *ngFor="let episode of episodeList[seasonNum]"
+            [title]="episode.tooltip" [innerHTML]="episode.text"></option>
+    </optgroup>
+</select>

@@ -9,20 +9,23 @@ import {
 
 @Injectable()
 export class SettingsService {
-
+  _settings: Settings;
   constructor(private dml: IDXDataManipulationService, private logger: LoggerService) {
 
   }
 
   async getSettings(): Promise<Settings> {
     try {
+        if (!!this._settings) {
+          return this._settings;
+        }
         const fetchResult = await this.dml.FetchAll('settings');
         const settings = new Settings();
         for (let index = 0; index < fetchResult[0].length; index++) {
           const element = fetchResult[0][index];
           settings[element.Name] = element.Value;
         }
-
+        this._settings = settings;
         // this.logger.log('FetchAll', settings);
         return settings;
       } catch (error) {
@@ -49,6 +52,7 @@ export class SettingsService {
           list.push({ 'Name': key, 'Value': setting[key] });
         }
       }
+      this._settings = null;
       if (list.length > 0) {
         return this.dml.AddList('settings', list);
       }

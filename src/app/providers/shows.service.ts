@@ -77,28 +77,28 @@ export class ShowsService {
     }
 
     GetShow(show_id): Promise<ShowModel> {
-        return this.dmlSvc.GetObj('subscribed_shows', show_id);
+        return <Promise<ShowModel>>this.dmlSvc.GetObj('subscribed_shows', show_id);
     }
 
     GetShowListObj(): Promise<{[show_id: string]: ShowModel}> {
-        return this.dmlSvc.FetchAll('subscribed_shows', 'show_id');
+        return <Promise<{[show_id: string]: ShowModel}>>this.dmlSvc.FetchAll('subscribed_shows', 'show_id');
     }
 
     GetShowListArray(): Promise<ShowModel[]> {
-        return this.dmlSvc.FetchAll('subscribed_shows');
+        return <Promise<ShowModel[]>>this.dmlSvc.FetchAll('subscribed_shows');
     }
 
     GetEpisode(episode_id: string): Promise<EpisodeModel> {
-        return this.dmlSvc.GetObj('subscribed_episodes', episode_id);
+        return <Promise<EpisodeModel>>this.dmlSvc.GetObj('subscribed_episodes', episode_id);
     }
 
     GetEpisodeListObj(show_id: string): Promise<{[episode_id: string]: EpisodeModel}> {
-        return this.dmlSvc.FindAllFiltered('subscribed_episodes', '==', {'first' : show_id} ,
+        return <Promise<{[episode_id: string]: EpisodeModel}>>this.dmlSvc.FindAllFiltered('subscribed_episodes', '==', {'first' : show_id} ,
         {indexName: 'show_id_Index', resultMapKey: 'episode_id'});
     }
 
     GetEpisodeListArray(show_id: string): Promise<EpisodeModel[]> {
-        return this.dmlSvc.FindAllFiltered('subscribed_episodes', '==', {'first' : show_id},
+        return <Promise<EpisodeModel[]>>this.dmlSvc.FindAllFiltered('subscribed_episodes', '==', {'first' : show_id},
         {indexName: 'show_id_Index'});
     }
 

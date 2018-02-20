@@ -1,10 +1,10 @@
-import { EpisodeModel,
-    CountryModel,
-    ChannelModel,
-    ApiIdModel,
-    ImageModel,
-    ScheduleModel,
-    UserRatingModel } from './';
+import { EpisodeModel } from './episode.model';
+import { CountryModel } from './country.model';
+import { ChannelModel } from './channel.model';
+import { ApiIdModel } from './api-id.model';
+import { ImageModel } from './image.model';
+import { ScheduleModel } from './schedule.model';
+import { UserRatingModel } from './user-rating.model';
 
 export class ShowModel {
     show_id: string;

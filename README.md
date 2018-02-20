@@ -19,7 +19,7 @@ To run as chrome extension open two cmd window and run below in each.
 
 ng build --watch
 
-lite-server --baseDir="dist" (node_modules/.bin/lite-server --baseDir="dist")
+npx lite-server --baseDir="dist"
 
 Troubleshoot:
 Make sure that global angular-cli version matches with package.json (if global packages are installed)

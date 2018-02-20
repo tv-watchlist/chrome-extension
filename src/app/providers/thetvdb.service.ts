@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toArray';
 import 'rxjs/add/operator/catch';
 // import { X2J } from '../lib/xml2json';
  import { TheTvDbAPI } from '../lib/thetvdb-api';
- import { CommonService } from 'app/providers';
+ import { CommonService } from './common.service';
 
 @Injectable()
 export class TheTvDbService {

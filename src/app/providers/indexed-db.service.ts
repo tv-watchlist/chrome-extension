@@ -62,7 +62,8 @@ export class IDXIndex {
 
 const TransactionType = {
   READ_ONLY: 'readonly',
-  READ_WRITE: 'readwrite'
+  READ_WRITE: 'readwrite',
+  VERSION_CHANGE:'versionchange'
 };
 
 const CursorType = {
@@ -327,7 +328,7 @@ export class IDXDataManipulationService {
       if (!storeName || !key) {
         reject('storeName or key cannot be empty');
       } else {
-        const transaction = this.db.transaction([storeName], TransactionType.READ_ONLY);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_ONLY);
         let obj = null;
         transaction.oncomplete = (event) => {
           resolve([obj, storeName]);
@@ -347,7 +348,7 @@ export class IDXDataManipulationService {
       if (!storeName || !obj) {
         reject('storeName or obj cannot be empty');
       } else {
-        const transaction = this.db.transaction([storeName], TransactionType.READ_WRITE);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_WRITE);
 
         const store = transaction.objectStore(storeName);
         const request = store.put(obj);
@@ -362,7 +363,7 @@ export class IDXDataManipulationService {
   ClearObjectStore(storeName: string) {
     return new Promise((resolve, reject) => {
       if (this.db.objectStoreNames.contains(storeName)) {
-        const clearTransaction = this.db.transaction([storeName], TransactionType.READ_WRITE);
+        const clearTransaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_WRITE);
         const clearRequest = clearTransaction.objectStore(storeName).clear();
         clearRequest.onsuccess = (event) => {
           resolve(true);
@@ -409,7 +410,7 @@ export class IDXDataManipulationService {
       if (!storeName || !key) {
         reject('storeName or key cannot be empty');
       } else {
-        const request = this.db.transaction(storeName, TransactionType.READ_WRITE)
+        const request = this.db.transaction(storeName, <IDBTransactionMode>TransactionType.READ_WRITE)
           .objectStore(storeName)
           .delete(key);
         request.onsuccess = (event) => {
@@ -435,7 +436,7 @@ export class IDXDataManipulationService {
         reject('storeName, indexName, operator, values cannot be empty');
       } else {
 
-        const transaction = this.db.transaction([storeName], TransactionType.READ_WRITE);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_WRITE);
         transaction.oncomplete = (event) => {
           resolve(true);
         };
@@ -462,7 +463,7 @@ export class IDXDataManipulationService {
    */
   FetchAll(storeName: string, resultMapKey?: string) {
     return new Promise((resolve, reject) => {
-        const transaction = this.db.transaction(storeName, TransactionType.READ_ONLY);
+        const transaction = this.db.transaction(storeName, <IDBTransactionMode>TransactionType.READ_ONLY);
         const list = resultMapKey ? {} : [] ;
         transaction.oncomplete = (event) => {
             // this.logger.log(results);
@@ -501,7 +502,7 @@ export class IDXDataManipulationService {
         reject('storeName, operator, values cannot be empty');
       } else {
         const resultSet = !!options.resultMapKey ? {} : [];
-        const transaction = this.db.transaction([storeName], TransactionType.READ_ONLY);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_ONLY);
         transaction.oncomplete = (event) => {
           resolve([resultSet, storeName]);
         };
@@ -514,11 +515,11 @@ export class IDXDataManipulationService {
         if (!!options.indexName) {
           const Index = store.index(options.indexName);
           cursorRequest = options.orderbyDesc ?
-            Index.openCursor(this.GetKeyRange(operator, values), CursorType.PREV) :
+            Index.openCursor(this.GetKeyRange(operator, values), <IDBCursorDirection>CursorType.PREV) :
             Index.openCursor(this.GetKeyRange(operator, values));
         } else {
           cursorRequest = options.orderbyDesc ?
-            store.openCursor(this.GetKeyRange(operator, values), CursorType.PREV) :
+            store.openCursor(this.GetKeyRange(operator, values), <IDBCursorDirection>CursorType.PREV) :
             store.openCursor(this.GetKeyRange(operator, values));
         }
         let limit = options.limit;
@@ -578,7 +579,7 @@ export class IDXDataManipulationService {
           }
         }
 
-        const transaction = this.db.transaction([storeName], TransactionType.READ_WRITE);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_WRITE);
         let count = 0;
         transaction.oncomplete = (event) => {
           this.logger.debug(storeName + ' Added ' + count + '/' + _list.length);
@@ -616,7 +617,7 @@ export class IDXDataManipulationService {
       if (!storeName) {
         reject('storeName cannot be empty');
       } else {
-        const transaction = this.db.transaction([storeName], TransactionType.READ_ONLY);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_ONLY);
         let obj = 0;
         transaction.oncomplete = (event) => {
           resolve(obj);
@@ -639,7 +640,7 @@ export class IDXDataManipulationService {
       if (!storeName || !indexName) {
         reject('storeName, indexName cannot be empty');
       } else {
-        const transaction = this.db.transaction([storeName], TransactionType.READ_ONLY);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_ONLY);
         let obj = 0;
         transaction.oncomplete = (event) => {
           resolve(obj);
@@ -664,7 +665,7 @@ export class IDXDataManipulationService {
       if (!storeName) {
         reject('storeName cannot be empty');
       } else {
-        const transaction = this.db.transaction([storeName], TransactionType.READ_ONLY);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_ONLY);
         let obj = null;
         transaction.oncomplete = (event) => {
           resolve([obj, storeName]);
@@ -696,7 +697,7 @@ export class IDXDataManipulationService {
       if (!storeName || !indexName) {
         reject('storeName cannot be empty');
       } else {
-        const transaction = this.db.transaction([storeName], TransactionType.READ_ONLY);
+        const transaction = this.db.transaction([storeName], <IDBTransactionMode>TransactionType.READ_ONLY);
         const list = [];
         transaction.oncomplete = (event) => {
           resolve([list, storeName]);
@@ -707,10 +708,10 @@ export class IDXDataManipulationService {
         if (indexName) {
           const Index = objectStore.index(indexName);
           cursorRequest = orderbyDesc ?
-            Index.openCursor(this.GetKeyRange(operator, values), CursorType.PREV) :
+            Index.openCursor(this.GetKeyRange(operator, values), <IDBCursorDirection>CursorType.PREV) :
             Index.openCursor(this.GetKeyRange(operator, values));
         } else {
-          cursorRequest = orderbyDesc ? objectStore.openCursor(null, CursorType.PREV) : objectStore.openCursor();
+          cursorRequest = orderbyDesc ? objectStore.openCursor(null, <IDBCursorDirection>CursorType.PREV) : objectStore.openCursor();
         }
 
         cursorRequest.onsuccess = function (ev) {

@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import {
-  LoggerService,
-  IDXDataDefinitionService,
-  IDXDataManipulationService,
-  SettingsService,
-  ShowsService,
-  CommonService
- } from './';
+import { CommonService } from './common.service';
+import { IDXDataManipulationService,IDXDataDefinitionService } from './indexed-db.service';
+import { LoggerService } from './logger.service';
+import { SettingsService } from './settings.service';
+import { ShowsService } from './shows.service';
 
 @Injectable()
 export class MigrationService {

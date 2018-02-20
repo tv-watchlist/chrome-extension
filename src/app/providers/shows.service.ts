@@ -4,7 +4,10 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ShowModel, EpisodeModel, Settings } from '../models';
 
-import { CommonService, IDXDataManipulationService, LoggerService, SettingsService } from './';
+import { CommonService } from './common.service';
+import { IDXDataManipulationService } from './indexed-db.service';
+import { LoggerService } from './logger.service';
+import { SettingsService } from './settings.service';
 
 const mytvdb = require('../../assets/tv-watchlist-db.json');
 

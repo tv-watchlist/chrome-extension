@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { CountryIso2, Settings } from '../models';
 
+import { LoggerService } from './logger.service';
+
 import {
-  LoggerService,
   IDXDataDefinitionService,
-  IDXDataManipulationService } from './';
+  IDXDataManipulationService } from './indexed-db.service';
 
 @Injectable()
 export class SettingsService {

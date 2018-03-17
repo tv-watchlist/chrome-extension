@@ -46,50 +46,50 @@ export class EpisodeListComponent implements OnChanges {
         const timezone_offset = globalSettings.timezone_offset || {};
 
         const episodelist = {};
-        for (const episode_id in show.episode_list) {
-            if (show.episode_list.hasOwnProperty(episode_id)) {
-                const episode = show.episode_list[episode_id];
-                let tooltip = `${show.name} Season ${episode.season} \n`;
-                if (episode.local_showtime) {
-                    const offset_next_date = new Date(episode.local_showtime);
-                    if (show.channel && show.channel.country && timezone_offset[show.channel.country.name]) {
-                        offset_next_date.setMinutes(offset_next_date.getMinutes() +
-                            (60 * Number(timezone_offset[show.channel.country.name])));
-                    }
-                    // Sat 1:25 PM, Jul 23rd, 2016
-                    tooltip += `<strong> ${this.datePipe.transform(offset_next_date, 'EEE hh:mm a, MMM dd, y')} </strong>`;
-                } else {
-                    tooltip += 'TBA';
-                }
+        // for (const episode_id in show.episode_list) {
+        //     if (show.episode_list.hasOwnProperty(episode_id)) {
+        //         const episode = show.episode_list[episode_id];
+        //         let tooltip = `${show.name} Season ${episode.season} \n`;
+        //         if (episode.local_showtime) {
+        //             const offset_next_date = new Date(episode.local_showtime);
+        //             if (show.channel && show.channel.country && timezone_offset[show.channel.country.name]) {
+        //                 offset_next_date.setMinutes(offset_next_date.getMinutes() +
+        //                     (60 * Number(timezone_offset[show.channel.country.name])));
+        //             }
+        //             // Sat 1:25 PM, Jul 23rd, 2016
+        //             tooltip += `<strong> ${this.datePipe.transform(offset_next_date, 'EEE hh:mm a, MMM dd, y')} </strong>`;
+        //         } else {
+        //             tooltip += 'TBA';
+        //         }
 
-                if (!!episode.summary) {
-                    tooltip += `\n ${episode.summary}`;
-                }
-                if (!isUnairedFlagSet && episode.local_showtime > today) {
-                    this.openSeason = episode.season;
-                    this.highLightNextEpisode = episode.episode_id;
-                }
-                if (episode.local_showtime > today) {
-                    // this.episodeList.push({'type':'label', 'text':`**UNAIRED**`});
-                    isUnairedFlagSet = true;
-                }
-                if (!episodelist[episode.season]) {
-                    episodelist[episode.season] = [];
-                    this.toggleViewState['buttonSeason' + episode.season] = false;
-                }
-                if (!isUnairedFlagSet) {
-                    this.totalEpisodes++;
-                }
-                this.toggleViewState['buttonEpisode' + episode.episode_id] = false;
-                episodelist[episode.season].push({
-                    'id': episode.episode_id,
-                    'text': this.getEpisodeName(episode),
-                    'tooltip': tooltip,
-                    'isunaired': isUnairedFlagSet,
-                    'seen': episode.seen
-                });
-            }
-        }
+        //         if (!!episode.summary) {
+        //             tooltip += `\n ${episode.summary}`;
+        //         }
+        //         if (!isUnairedFlagSet && episode.local_showtime > today) {
+        //             this.openSeason = episode.season;
+        //             this.highLightNextEpisode = episode.episode_id;
+        //         }
+        //         if (episode.local_showtime > today) {
+        //             // this.episodeList.push({'type':'label', 'text':`**UNAIRED**`});
+        //             isUnairedFlagSet = true;
+        //         }
+        //         if (!episodelist[episode.season]) {
+        //             episodelist[episode.season] = [];
+        //             this.toggleViewState['buttonSeason' + episode.season] = false;
+        //         }
+        //         if (!isUnairedFlagSet) {
+        //             this.totalEpisodes++;
+        //         }
+        //         this.toggleViewState['buttonEpisode' + episode.episode_id] = false;
+        //         episodelist[episode.season].push({
+        //             'id': episode.episode_id,
+        //             'text': this.getEpisodeName(episode),
+        //             'tooltip': tooltip,
+        //             'isunaired': isUnairedFlagSet,
+        //             'seen': episode.seen
+        //         });
+        //     }
+        // }
         this.seasonNumList = Object.keys(episodelist);
         this.seasonNumList.reverse();
         this.episodeList = episodelist;
@@ -131,14 +131,14 @@ export class EpisodeListComponent implements OnChanges {
     }
 
     setToggleSeen(season: number, episode: any) {
-        const ep = this.show.episode_list[episode.id];
-        ep.seen = !ep.seen;
+        // const ep = this.show.episode_list[episode.id];
+        // ep.seen = !ep.seen;
 
         const arr = this.episodeList[season].filter((obj: any) => {
             return obj.id === episode.id;
         });
         arr[0].seen = !arr[0].seen;
-        arr[0].text = this.getEpisodeName(ep);
+        //arr[0].text = this.getEpisodeName(ep);
     }
 
     setSeasonSeen(season: number) {
@@ -151,9 +151,9 @@ export class EpisodeListComponent implements OnChanges {
                 return;
             }
             episode.seen = true;
-            const ep = this.show.episode_list[episode.id];
-            ep.seen = true;
-            episode.text = this.getEpisodeName(ep);
+            // const ep = this.show.episode_list[episode.id];
+            // ep.seen = true;
+            // episode.text = this.getEpisodeName(ep);
         });
     }
 

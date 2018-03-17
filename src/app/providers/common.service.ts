@@ -5,6 +5,38 @@ export class CommonService {
 
   constructor() { }
 
+  ParseDate(yyyy_mm_dd, hh_mm) {
+    let d = yyyy_mm_dd.match(/(\d+)/g);
+    // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+    if(d[1] == "00")
+    {
+      d[1] ="12";
+    }
+    if(d[2] == "00")
+    {
+      d[2] ="30";
+    }
+    if (hh_mm) {
+        let t = this.ParseTime(hh_mm);
+        let hr = t[0]==='PM'? t[1]+12:t[1];
+        return new Date(d[0], d[1] - 1, d[2], hr, t[2]); // months are 0-based
+    } else {
+        return new Date(d[0], d[1] - 1, d[2]); // months are 0-based
+    }
+  }
+  //result as array[is12HrFormat,Hr,Min,Sec,Ms] "3:00 AM"
+  /**
+   * "3:00 AM" = ['AM', 3, 0];
+   * @param hh_mm 
+   */
+  ParseTime(hh_mm) {
+      if (hh_mm) {
+          let ampm = hh_mm.toLowerCase().match(/am|pm/gi);
+          let t = hh_mm.match(/(\d+)/g);
+          return [ampm ? ampm[0].toUpperCase() : null, t[0], t[1], t[2], t[3]];
+      }
+  }
+
   DaysBetween(first: Date, second: Date) {
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
     const millisBetween = second.getTime() - first.getTime();

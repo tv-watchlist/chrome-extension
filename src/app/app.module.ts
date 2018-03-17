@@ -9,7 +9,12 @@ import { AppComponent } from './app.component';
 import { OptionsComponent } from './options/options.component';
 import { NavBarComponent } from './options/nav-bar/nav-bar.component';
 import { BackgroundComponent } from './background/background.component';
+
 import { PopupComponent } from './popup/popup.component';
+import { PopupEpisodeListComponent } from './popup/episode-list/episode-list.component';
+import { ShowListComponent } from './popup/show-list/show-list.component';
+import { SearchListComponent } from './popup/search-list/search-list.component';
+
 import { SearchSummaryComponent } from './popup/search-summary/search-summary.component';
 import { NotFoundComponent } from './not-found.component';
 import { DropboxComponent } from './dropbox/dropbox.component';
@@ -19,6 +24,7 @@ import { EpisodeListComponent } from './show-detail/episode-list/episode-list.co
 import { SettingsComponent } from './options/settings/settings.component';
 import { ShowSummaryBannerComponent } from './show-summary-banner/show-summary-banner.component';
 import { EpisodeDropdownListComponent } from './show-summary-banner/episode-dropdown-list/episode-dropdown-list.component';
+import { HelpComponent } from './options/help/help.component';
 
 import { WidgetModule } from './widgets/widget.module';
 import {
@@ -134,10 +140,16 @@ export function indexedDBFactory(ddl: IDXDataDefinitionService, dml: IDXDataMani
     BackgroundComponent,
     OptionsComponent,
     PopupComponent,
+    PopupEpisodeListComponent,
+    ShowListComponent,
+    SearchListComponent,
+    
+
     NotFoundComponent,
     NavBarComponent,
     ShowManagerComponent,
     SettingsComponent,
+    HelpComponent,
     DropboxComponent,
     ShowSummaryBannerComponent,
     ShowDetailComponent,

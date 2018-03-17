@@ -19,69 +19,164 @@ export class TvMaze {
 
     }
 
-    private handleError(error:  AjaxError) {
-        console.error('handleError', error); // log to console instead
+    private handleError(target: string, error: AjaxError) {
+        console.error(`${target} failed!`, error); // log to console instead
         return Observable.throw(error.message || 'Server Error');
     }
 
-    ShowSearch(showName:  string): Observable<TvMazeSearch[]> {
-        return Observable.ajax({'method':  'GET',
-                'url':  `https: //api.tvmaze.com/search/shows?q=${encodeURIComponent(showName)}`,
-                'headers':  { 'Content-Type':  'application/json'}
-            })
-            .map((res:  AjaxResponse) => {
-                return res.response;
-            })
-            .catch((error:  any) => this.handleError(error));
+    ShowSearch(showName: string): Observable<TvMazeSearch[]> {
+        return Observable.ajax({
+            method: 'GET',
+            url: `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(showName)}`,
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .map((res: AjaxResponse) => {
+            return res.response;
+        })
+        .catch((error: any) => this.handleError('tvmaze.ShowSearch', error));
     }
 
+    LookupByTheTvdb(thetvdb_id): Observable<TvMazeShow> {
+        return Observable.ajax({
+            method: 'GET',
+            url: `https://api.tvmaze.com/lookup/shows?thetvdb=${thetvdb_id}`,
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .map((res: AjaxResponse) => {
+            return res.response;
+        })
+        .catch((error: any) => this.handleError('tvmaze.LookupByThetvdb', error));
+    }
+
+    getShow(tvmaze_id): Observable<TvMazeShow> {
+        let shows: Observable<TvMazeShow> = Observable.ajax({
+            method: 'GET',
+            url: `http://api.tvmaze.com/shows/${tvmaze_id}`,
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .map((res: AjaxResponse) => {
+            return res.response;
+        })
+        .catch((error: any) => this.handleError('tvmaze.ShowAndEpisode shows', error));
+        return shows;
+    }
+
+    getEpisodes(tvmaze_id): Observable<TvMazeEpisode[]> {
+        let epsisodes: Observable<TvMazeEpisode[]> = Observable.ajax({
+            method: 'GET',
+            url: `http://api.tvmaze.com/shows/${tvmaze_id}/episodes?specials=1`,
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .map((res: AjaxResponse) => {
+            return res.response;
+        })
+        .catch((error: any) => this.handleError('tvmaze.ShowAndEpisode episodes', error));
+        
+        return epsisodes;
+    }
+
+    Update(): Observable<{[Id: string]: number}>{
+        return Observable.ajax({
+            method: 'GET',
+            url: `http://api.tvmaze.com/updates/shows`,
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .map((res: AjaxResponse) => {
+            return res.response;
+        })
+        .catch((error: any) => this.handleError('tvmaze.Update', error));
+    }
 }
 
-export class TvMazeSearch {
-    score:  number;
-    show:  {
-        id:  number,
-        url:  string,
+export interface TvMazeSearch {
+    score: number;
+    show: TvMazeShow;
+}
+
+export interface TvMazeShow { 
+    id: number;
+    url: string;
+    name: string;
+    type: string;
+    language: string;
+    genres: string[];
+    status: string;
+    runtime: number;
+    premiered: string;
+    officialSite: string;
+    schedule: {
+        time: string,
+        days: string[]
+    };
+    rating: {
+        average: number
+    };
+    weight: number;
+    network: {
+        id: number,
         name: string,
-        type: string,
-        language: string,
-        genres: string[],
-        status: string,
-        runtime: number,
-        premiered: string,
-        officialSite: string,
-        schedule: {
-            time: string,
-            days: string[]
-        },
-        rating: {
-            average: number
-        },
-        weight: number,
-        network: {
-            id: number,
+        country: {
             name: string,
-            country: {
-                name: string,
-                code: string,
-                timezone: string
-            }
-        },
-        webChannel: string,
-        externals: {
-            tvrage: number,
-            thetvdb: number,
-            imdb: string
-        },
-        image: {
-            medium: string,
-            original: string
-        },
-        summary: string,
-        updated: number,
-        _links: {
-            self: {href: string},
-            previousepisode: {href: string}
+            code: string,
+            timezone: string
+        }
+    };
+    webChannel: {
+        id: number,
+        name: string,
+        country: {
+            name: string,
+            code: string,
+            timezone: string
+        }
+    };
+    externals: {
+        tvrage: number,
+        thetvdb: number,
+        imdb: string
+    };
+    image: {
+        medium: string,
+        original: string
+    };
+    summary: string;
+    updated: number;
+    _links: {
+        self: { href: string },
+        previousepisode: { href: string }
+    } 
+}
+
+export interface TvMazeEpisode {
+    id: number;
+    url: string;
+    name: string;
+    season: number;
+    number: number;
+
+    /**
+     * 2013-06-24
+     */
+    airdate: string;
+
+    /**
+     * 22:00
+     */
+    airtime: string;
+
+    /**
+     * 2013-06-25T02:00:00+00:00
+     */
+    airstamp: string;
+    runtime: number;
+    image: {
+        medium: string,
+        original: string
+    };
+    summary: string;
+    _links: {
+        self:{
+            href: string
         }
     }
 }

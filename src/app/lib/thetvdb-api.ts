@@ -13,6 +13,10 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/empty';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/forkJoin';
+
+
 
 export class TheTvDbAPI {
     // for examples look below url
@@ -130,17 +134,10 @@ export class TheTvDbAPI {
                          }))
                          .map((aRes: AjaxResponse) => aRes.response.data)
                          .catch((error: any) => this.handleError(error));
-        return ob;
-        //    return Observable.create((observer) => {
-        //          ob.subscribe(series => {
-        //             // console.log(series);
-        //             observer.next(series);
-        //             observer.complete();
-        //         }, error => {
-        //             console.error(error);
-        //             observer.error(error);
-        //         });
-        //    });
+        return ob.map(data => {
+            data.banner = this.imagePrefix + data.banner;
+            return data;
+        });
     }
 
     searchSeries(query: {name?: string, imdbId?: string, zap2itId?: string}): Observable<TheTvDbSearch[]> {
@@ -165,39 +162,49 @@ export class TheTvDbAPI {
 
         return ob.map(searches => {
             searches.forEach(element => {
-                element.banner = this.imagePrefix + element.banner;
+                if(!!element.banner){
+                    element.banner = this.imagePrefix + element.banner;
+                }
             });
             return searches;
         });
     }
 
-    getPagedEpisodes(series_id: number, page?: number): Observable<TheTvDbEpisode>  {
+    getPagedEpisodes(series_id: number, page?: number): Observable<TheTvDbEpisode[]>  {
         let url = `https://api.thetvdb.com/series/${series_id}/episodes`;
         if (page !== null) {
             url += `?page=${page}`;
         } else {
             return Observable.empty();
-        }
-        return this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
-                'url': url,
-                'responseType': 'json',
-                'headers': { 'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
-                    'Accept-Language': 'en' }
-                }))
-                .mergeMap((res: AjaxResponse) => {
-                    // if hasNextPage
-                    // console.log('hasNextPage', res.response);
-                    if (res.response && res.response.links && res.response.links.next) {
-                        return Observable.concat(res.response.data, this.getPagedEpisodes(series_id, res.response.links.next));
-                    }
-                    return res.response.data;
-                })
-                .catch((error: any) => this.handleError(error));
+        } //121361
+        return this.getToken().mergeMap(token => Observable.ajax({
+            'method': 'GET',
+            'url': url,
+            'responseType': 'json',
+            'headers': { 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
+                'Accept-Language': 'en' }
+            }))
+            .flatMap((res: AjaxResponse) => {
+                if (res.response && res.response.links && res.response.links.next) {
+                    console.log('hasNextPage', res.response);
+                    return Observable.forkJoin(Observable.of(res.response.data), 
+                                            this.getPagedEpisodes(series_id, res.response.links.next)).map(x => {
+                        let combined = x[0].concat(x[1]);
+                        return combined
+                    });
+                }
+                if(!!res.response.data) {
+                    return Observable.of(res.response.data);
+                }
+                  
+                return [];
+            })
+            .catch((error: any) => this.handleError(error));
     }
 
-    getEpisodes(series_id: number): Observable<TheTvDbEpisode>  {
+    getEpisodes(series_id: number): Observable<TheTvDbEpisode[]> {
         return this.getPagedEpisodes(series_id, 1);
     }
 
@@ -214,8 +221,12 @@ export class TheTvDbAPI {
                          .catch((error: any) => this.handleError(error));
         return ob.map(images => {
             images.forEach(element => {
-                element.fileName = this.imagePrefix + element.fileName;
-                element.thumbnail = this.imagePrefix + element.thumbnail;
+                if(!!element.fileName) {
+                    element.fileName = this.imagePrefix + element.fileName;
+                }
+                if(!!element.thumbnail) {
+                    element.thumbnail = this.imagePrefix + element.thumbnail;
+                }
             });
             return images;
         });
@@ -235,8 +246,12 @@ export class TheTvDbAPI {
 
         return ob.map(images => {
             images.forEach(element => {
-                element.fileName = this.imagePrefix + element.fileName;
-                element.thumbnail = this.imagePrefix + element.thumbnail;
+                if(!!element.fileName) {
+                    element.fileName = this.imagePrefix + element.fileName;
+                }
+                if(!!element.thumbnail) {
+                    element.thumbnail = this.imagePrefix + element.thumbnail;
+                }
             });
             return images;
         });
@@ -257,7 +272,7 @@ export class TheTvDbAPI {
     }
 }
 
-export class TheTvDbSeries {
+export interface TheTvDbSeries {
     added: string;
     airsDayOfWeek: string;
     airsTime: string;
@@ -281,7 +296,7 @@ export class TheTvDbSeries {
     zap2itId: string;
 }
 
-export class TheTvDbEpisode {
+export interface TheTvDbEpisode {
     absoluteNumber: number;
     airedEpisodeNumber: number;
     airedSeason: number;
@@ -296,7 +311,8 @@ export class TheTvDbEpisode {
     overview: string;
 }
 
-export class TheTvDbImage {
+
+export interface TheTvDbImage {
     fileName: string;
     id: number;
     keyType: string;
@@ -310,7 +326,7 @@ export class TheTvDbImage {
     thumbnail: string
 }
 
-export class TheTvDbSearch {
+export interface TheTvDbSearch {
   aliases: string[];
   banner: string;
   firstAired: string;

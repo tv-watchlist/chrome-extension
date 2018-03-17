@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <form class="form-inline my-2 my-lg-0">
+                <input #searchTxt class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success my-2 my-sm-0" type="submit" (click)="searchMaze(searchTxt.value)">Search TvMaze</button>
+                <button class="btn btn-success my-2 ml-2 my-sm-0" type="submit" (click)="searchTvDb(searchTxt.value)">Search TheTvDB</button>
+                <button class="btn btn-primary my-2 ml-2 my-sm-0" type="submit" (click)="queryMaze(searchTxt.value)">Query TvMaze</button>
+                <button class="btn btn-primary my-2 ml-2 my-sm-0" type="submit" (click)="queryTvDb(searchTxt.value)">Query TheTvDB</button>
+            </form>
+        </div>
+    </div>
+    <h2>Search Results</h2>
+    <div class="row" *ngFor="let search of Result">
+        <div class="col">
+            <pre>
+                {{search|json}}
+            </pre>
+        </div>
+    </div>
+    <h2>Query Results</h2>
+    <div class="row">
+            <div class="col">
+                <pre>
+                    {{QueryResult|json}}
+                </pre>
+            </div>
+        </div>
+</div>

@@ -1,23 +1,38 @@
-export class SearchModel {
-    showId: number;
-    apiId: string;
-    showName: string;
-    poster: string;
-    channel: string;
-    showTime: string;
-    showStatus: string;
-    showUrl: string;
-    summary: string;
+import { Days } from "./show.model";
 
-    constructor() {
-        this.showId = 0;
-        this.apiId = '';
-        this.showName = '';
-        this.poster = '';
-        this.channel = '';
-        this.showTime = '';
-        this.showStatus = '';
-        this.summary = '';
-        this.showUrl ='';
-    }
-}
+export class SearchModel {
+    show_id = '';
+    api_source = '';
+    api_id: {
+        tvmaze?: number;
+        thetvdb?: number;
+        imdb?: string;
+    } = {};
+    name = '';
+    url = '';
+    show_type = '';
+    language = '';
+    genres: string[] = [];
+    status = ''; // (Running, Ended, To Be Determined, In Development)
+    runtime: number = 0;
+    premiered = '';
+    summary = '';
+    schedule: {
+        time?: string;
+        days?: Days[];
+    } = {};
+    channel: {
+        name?: string,
+        image?: string,
+    } = {};
+    country: {
+        name: string,
+        code: string,
+        timezone: string
+    };
+    
+    image: {
+        banner?: string[];
+        poster?: string[];
+    } = {};
+};

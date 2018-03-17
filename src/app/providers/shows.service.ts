@@ -61,15 +61,15 @@ export class ShowsService {
         const offset_last_date = !!show.last_episode ? new Date(show.last_episode.local_showtime) : null;
 
         const timezone_offset = settings.timezone_offset || {};
-        if (show.channel && show.channel.country && timezone_offset[show.channel.country.name]) {
+        if (show.country && timezone_offset[show.country.name]) {
             if (!!offset_next_date) {
-                offset_next_date.setMinutes(offset_next_date.getMinutes() + (60 * Number(timezone_offset[show.channel.country.name])));
+                offset_next_date.setMinutes(offset_next_date.getMinutes() + (60 * Number(timezone_offset[show.country.name])));
             }
             if (!!offset_prev_date) {
-                offset_prev_date.setMinutes(offset_prev_date.getMinutes() + (60 * Number(timezone_offset[show.channel.country.name])));
+                offset_prev_date.setMinutes(offset_prev_date.getMinutes() + (60 * Number(timezone_offset[show.country.name])));
             }
             if (!!offset_last_date) {
-                offset_last_date.setMinutes(offset_last_date.getMinutes() + (60 * Number(timezone_offset[show.channel.country.name])));
+                offset_last_date.setMinutes(offset_last_date.getMinutes() + (60 * Number(timezone_offset[show.country.name])));
             }
         }
 
@@ -107,7 +107,7 @@ export class ShowsService {
 
     SaveShow(show: ShowModel) {
         if (show) {
-            delete show.episode_list;
+            //delete show.episode_list;
             return this.dmlSvc.SetObj('subscribed_shows', show);
         } else {
             return Promise.reject(false);
@@ -147,8 +147,8 @@ export class ShowsService {
         return this.GetShow(show_id).then((show: ShowModel) => {
             if (!!show) {
                 return this.GetEpisodeListObj(show.show_id).then(episode_list => {
-                    show.episode_list = episode_list;
-                    return Promise.resolve(show);
+                    // show.episode_list = episode_list;
+                    return Promise.resolve([show,episode_list]);
                 });
             } else {
                 return Promise.reject(false);
@@ -159,6 +159,7 @@ export class ShowsService {
     GetAllShowsAndEpisodes() {
         // console.log('GetAllShowsAndEpisodes called');
         return this.GetShowListArray().then(show_list => {
+            let result = [];
             // console.log('GetAllShowsAndEpisodes called',show_list);
             let show_counter = 0;
             show_list = show_list || [];
@@ -166,14 +167,14 @@ export class ShowsService {
                 console.log('GetAllShowsAndEpisodes', showIndex, showItem);
                 this.GetEpisodeListObj(showItem.show_id).then(episode_list => {
                     show_counter++;
-                    showItem.episode_list = episode_list;
-                    if (show_counter === show_list.length) {
-                        return Promise.resolve(show_list);
+                    result.push([showItem, episode_list]);
+                    if (show_counter === result.length) {
+                        return Promise.resolve(result);
                     }
                 });
             });
-            if (show_list.length === 0) {
-               return Promise.resolve(show_list);
+            if (result.length === 0) {
+               return Promise.resolve(result);
             }
         });
     }
@@ -345,201 +346,201 @@ export class ShowsService {
     }
 
     // calls api and tranforms to model
-    AddUpdateShow(id, api): Promise<ShowModel> {
-        console.log('AddUpdateShow1', id, api);
-        const show_id = api + id;
-        const _newShow = new ShowModel();
-        const today = (new Date()).getTime();
+    // AddUpdateShow(id, api): Promise<ShowModel> {
+    //     console.log('AddUpdateShow1', id, api);
+    //     const show_id = api + id;
+    //     const _newShow = new ShowModel();
+    //     const today = (new Date()).getTime();
 
-        if (api === 'tvmaze') {
-            // console.log('AddUpdateShow1', show_id, id);
-            return this.GetShowAndEpisodes(show_id).then((existing_show: ShowModel) => {
-                // existing_show, existing_episode_list
-                return <Promise<any>>this.tvmazeSvc.ShowAndEpisode(id).then((show: any, episode_list: any) => {
-                    // TODO almost duplicate code, merge it with migration
-                    return <Promise<any>> this.thetvdbSvc.GetSeries(show.externals.thetvdb).then(theTvDB => {
-                        // console.log('AddUpdateShow2', existing_show,show, episode_list,theTvDB);
-                        const newShow = !!existing_show ? existing_show : _newShow;
-                        // console.log('theTvDB',show, newShow,theTvDB);
-                        if (!!theTvDB) {
-                            // if (theTvDB.banner_image && !nsr.inArray(theTvDB.banner_image, newShow.image.banner))
-                            //     newShow.image.banner.unshift(theTvDB.banner_image);
+    //     if (api === 'tvmaze') {
+    //         // console.log('AddUpdateShow1', show_id, id);
+    //         return this.GetShowAndEpisodes(show_id).then((existing_show: ShowModel) => {
+    //             // existing_show, existing_episode_list
+    //             return <Promise<any>>this.tvmazeSvc.ShowAndEpisode(id).then((show: any, episode_list: any) => {
+    //                 // TODO almost duplicate code, merge it with migration
+    //                 return <Promise<any>> this.thetvdbSvc.GetSeries(show.externals.thetvdb).then(theTvDB => {
+    //                     // console.log('AddUpdateShow2', existing_show,show, episode_list,theTvDB);
+    //                     const newShow = !!existing_show ? existing_show : _newShow;
+    //                     // console.log('theTvDB',show, newShow,theTvDB);
+    //                     if (!!theTvDB) {
+    //                         // if (theTvDB.banner_image && !nsr.inArray(theTvDB.banner_image, newShow.image.banner))
+    //                         //     newShow.image.banner.unshift(theTvDB.banner_image);
 
-                            // if (theTvDB.poster_image && !nsr.inArray(theTvDB.poster_image, newShow.image.poster))
-                            //     newShow.image.poster.unshift(theTvDB.poster_image);
+    //                         // if (theTvDB.poster_image && !nsr.inArray(theTvDB.poster_image, newShow.image.poster))
+    //                         //     newShow.image.poster.unshift(theTvDB.poster_image);
 
-                            newShow.api_id.imdb = theTvDB.imdb;
-                            newShow.api_id.zap2it = theTvDB.zap2it;
-                            newShow.content_rating = theTvDB.ContentRating;
-                        }
+    //                         newShow.api_id.imdb = theTvDB.imdb;
+    //                         newShow.api_id.zap2it = theTvDB.zap2it;
+    //                         newShow.content_rating = theTvDB.ContentRating;
+    //                     }
 
-                        newShow.show_id = show_id;
-                        newShow.api_source = api;
-                        newShow.api_id.tvmaze = show.id;
-                        newShow.api_id.thetvdb = show.externals.thetvdb;
-                        newShow.api_id.tvrage = show.externals.tvrage;
-                        newShow.next_update_time = show.updated;
+    //                     newShow.show_id = show_id;
+    //                     newShow.api_source = api;
+    //                     newShow.api_id.tvmaze = show.id;
+    //                     newShow.api_id.thetvdb = show.externals.thetvdb;
+    //                     newShow.api_id.tvrage = show.externals.tvrage;
+    //                     newShow.next_update_time = show.updated;
 
-                        const channel = show.network || show.webChannel;
-                        if (!!channel) {
-                            newShow.channel.name = channel.name || '';
-                            if (!!channel.country) {
-                                newShow.channel.country = channel.country;
-                            }
-                        }
+    //                     const channel = show.network || show.webChannel;
+    //                     if (!!channel) {
+    //                         newShow.channel.name = channel.name || '';
+    //                         if (!!channel.country) {
+    //                             newShow.channel.country = channel.country;
+    //                         }
+    //                     }
 
-                        newShow.name = show.name;
-                        newShow.url = show.url;
-                        newShow.show_type = show.type;
-                        newShow.language = show.language;
-                        newShow.genres = show.genres;
-                        newShow.status = show.status; // (Running, Ended, To Be Determined, In Development)
-                        newShow.runtime = show.runtime;
-                        newShow.premiered = show.premiered;
-                        newShow.summary = show.summary;
-                        newShow.schedule = show.schedule;
-                        newShow.user_rating.average = show.rating.average;
-                        // if (!!show.image && !nsr.inArray(show.image.original, newShow.image.poster))
-                        //     newShow.image.poster.push(show.image.original);
-                        let unknown_episode_list = episode_list.filter((item, index) => !item.airstamp);
-                        const known_episode_list = episode_list.filter((item, index) => !!item.airstamp)
+    //                     newShow.name = show.name;
+    //                     newShow.url = show.url;
+    //                     newShow.show_type = show.type;
+    //                     newShow.language = show.language;
+    //                     newShow.genres = show.genres;
+    //                     newShow.status = show.status; // (Running, Ended, To Be Determined, In Development)
+    //                     newShow.runtime = show.runtime;
+    //                     newShow.premiered = show.premiered;
+    //                     newShow.summary = show.summary;
+    //                     newShow.schedule = show.schedule;
+    //                     newShow.user_rating.average = show.rating.average;
+    //                     // if (!!show.image && !nsr.inArray(show.image.original, newShow.image.poster))
+    //                     //     newShow.image.poster.push(show.image.original);
+    //                     let unknown_episode_list = episode_list.filter((item, index) => !item.airstamp);
+    //                     const known_episode_list = episode_list.filter((item, index) => !!item.airstamp)
 
-                        known_episode_list.sort((x, y) => {
-                            const x1 = `${this.cmnSvc.ZeroPad(x.airstamp, 13)}_${this.cmnSvc.ZeroPad(x.season,
-                                4)}_${this.cmnSvc.ZeroPad(x.number || 0, 4)}`;
-                            const y1 = `${this.cmnSvc.ZeroPad(y.airstamp, 13)}_${this.cmnSvc.ZeroPad(y.season,
-                                4)}_${this.cmnSvc.ZeroPad(y.number || 0, 4)}`;
-                            return ((x1 < y1) ? -1 : ((x1 > y1) ? 1 : 0));
-                        });
+    //                     known_episode_list.sort((x, y) => {
+    //                         const x1 = `${this.cmnSvc.ZeroPad(x.airstamp, 13)}_${this.cmnSvc.ZeroPad(x.season,
+    //                             4)}_${this.cmnSvc.ZeroPad(x.number || 0, 4)}`;
+    //                         const y1 = `${this.cmnSvc.ZeroPad(y.airstamp, 13)}_${this.cmnSvc.ZeroPad(y.season,
+    //                             4)}_${this.cmnSvc.ZeroPad(y.number || 0, 4)}`;
+    //                         return ((x1 < y1) ? -1 : ((x1 > y1) ? 1 : 0));
+    //                     });
 
-                        let init_season = known_episode_list.length > 0 ? known_episode_list[0].season : 1;
-                        let clean_episode_list = [];
+    //                     let init_season = known_episode_list.length > 0 ? known_episode_list[0].season : 1;
+    //                     let clean_episode_list = [];
 
-                        known_episode_list.forEach((episode, index, episodeArray) => {
-                            if (episode.season !== init_season) {
-                                clean_episode_list = clean_episode_list.concat(episode_list.filter((item) => item.season === init_season));
-                                unknown_episode_list = unknown_episode_list.filter((item) => item.season !== init_season);
-                                init_season = episode.season;
-                            }
-                            clean_episode_list.push(episode);
-                        });
-                        clean_episode_list = clean_episode_list.concat(unknown_episode_list);
+    //                     known_episode_list.forEach((episode, index, episodeArray) => {
+    //                         if (episode.season !== init_season) {
+    //                             clean_episode_list = clean_episode_list.concat(episode_list.filter((item) => item.season === init_season));
+    //                             unknown_episode_list = unknown_episode_list.filter((item) => item.season !== init_season);
+    //                             init_season = episode.season;
+    //                         }
+    //                         clean_episode_list.push(episode);
+    //                     });
+    //                     clean_episode_list = clean_episode_list.concat(unknown_episode_list);
 
-                        console.log('AddUpdateShow', clean_episode_list);
-                        let normal_counter = 0;
-                        let special_counter = 0;
-                        let last_number = 0;
-                        const newEpisodeList = [];
+    //                     console.log('AddUpdateShow', clean_episode_list);
+    //                     let normal_counter = 0;
+    //                     let special_counter = 0;
+    //                     let last_number = 0;
+    //                     const newEpisodeList = [];
 
-                        clean_episode_list.forEach((episode, index, episodeArray) => {
-                            const newEpisode = new EpisodeModel();
-                            newEpisode.show_id = newShow.show_id;
-                            newEpisode.local_showtime = episode.airstamp ? Date.parse(episode.airstamp) : null;
-                            newEpisode.name = episode.name;
-                            newEpisode.url = episode.url;
-                            newEpisode.iso8601 = episode.airstamp;
-                            newEpisode.runtime = episode.runtime;
-                            newEpisode.season = episode.season;
-                            newEpisode.number = episode.number;
-                            newEpisode.summary = episode.summary;
+    //                     clean_episode_list.forEach((episode, index, episodeArray) => {
+    //                         const newEpisode = new EpisodeModel();
+    //                         newEpisode.show_id = newShow.show_id;
+    //                         newEpisode.local_showtime = episode.airstamp ? Date.parse(episode.airstamp) : null;
+    //                         newEpisode.name = episode.name;
+    //                         newEpisode.url = episode.url;
+    //                         newEpisode.iso8601 = episode.airstamp;
+    //                         newEpisode.runtime = episode.runtime;
+    //                         newEpisode.season = episode.season;
+    //                         newEpisode.number = episode.number;
+    //                         newEpisode.summary = episode.summary;
 
-                            newEpisode.api_source = 'tvmaze';
-                            newEpisode.api_id.tvmaze = episode.id;
-                            newEpisode.image.poster = !!episode.image ? episode.image.original : [];
-                            if (episode.number != null) {
-                                last_number = episode.number;
-                                newEpisode.special = false;
-                                newEpisode.counter = ++normal_counter;
+    //                         newEpisode.api_source = 'tvmaze';
+    //                         newEpisode.api_id.tvmaze = episode.id;
+    //                         newEpisode.image.poster = !!episode.image ? episode.image.original : [];
+    //                         if (episode.number != null) {
+    //                             last_number = episode.number;
+    //                             newEpisode.special = false;
+    //                             newEpisode.counter = ++normal_counter;
 
-                                newEpisode.episode_id = `${newShow.show_id}_${this.cmnSvc.ZeroPad(normal_counter,
-                                    4)}_${this.cmnSvc.ZeroPad(newEpisode.season, 4)}_${this.cmnSvc.ZeroPad(last_number, 4)}`;
+    //                             newEpisode.episode_id = `${newShow.show_id}_${this.cmnSvc.ZeroPad(normal_counter,
+    //                                 4)}_${this.cmnSvc.ZeroPad(newEpisode.season, 4)}_${this.cmnSvc.ZeroPad(last_number, 4)}`;
 
-                                // newEpisode.episode_id = newShow.show_id + '_' + nsr.ZeroPad(newEpisode.local_showtime,13) + '_' +
-                                //     nsr.ZeroPad(newEpisode.season, 4) + '_' + nsr.ZeroPad(newEpisode.number, 4) + '_' + 'E' +
-                                //     nsr.ZeroPad(newEpisode.counter,4);
-                            } else {
-                                newEpisode.special = true;
-                                newEpisode.counter = ++special_counter;
-                                newEpisode.episode_id = `${newShow.show_id}_${this.cmnSvc.ZeroPad(normal_counter,
-                                     4)}_${this.cmnSvc.ZeroPad(newEpisode.season, 4)}_${this.cmnSvc.ZeroPad(last_number,
-                                     4)}S${this.cmnSvc.ZeroPad(special_counter, 2)}`;
+    //                             // newEpisode.episode_id = newShow.show_id + '_' + nsr.ZeroPad(newEpisode.local_showtime,13) + '_' +
+    //                             //     nsr.ZeroPad(newEpisode.season, 4) + '_' + nsr.ZeroPad(newEpisode.number, 4) + '_' + 'E' +
+    //                             //     nsr.ZeroPad(newEpisode.counter,4);
+    //                         } else {
+    //                             newEpisode.special = true;
+    //                             newEpisode.counter = ++special_counter;
+    //                             newEpisode.episode_id = `${newShow.show_id}_${this.cmnSvc.ZeroPad(normal_counter,
+    //                                  4)}_${this.cmnSvc.ZeroPad(newEpisode.season, 4)}_${this.cmnSvc.ZeroPad(last_number,
+    //                                  4)}S${this.cmnSvc.ZeroPad(special_counter, 2)}`;
 
-                                // newEpisode.episode_id = newShow.show_id + '_' + nsr.ZeroPad(newEpisode.local_showtime,13) + '_' +
-                                //     nsr.ZeroPad(newEpisode.season, 4) + '_' + nsr.ZeroPad(last_number, 4) + '_' + 'S' +
-                                //     nsr.ZeroPad(newEpisode.counter,4);
-                            }
+    //                             // newEpisode.episode_id = newShow.show_id + '_' + nsr.ZeroPad(newEpisode.local_showtime,13) + '_' +
+    //                             //     nsr.ZeroPad(newEpisode.season, 4) + '_' + nsr.ZeroPad(last_number, 4) + '_' + 'S' +
+    //                             //     nsr.ZeroPad(newEpisode.counter,4);
+    //                         }
 
-                            newEpisodeList.push(newEpisode);
-                        });
+    //                         newEpisodeList.push(newEpisode);
+    //                     });
 
-                        // console.log(JSON.stringify(newEpisodeList));
-                        if (newEpisodeList.length > 0) {
-                            newShow.first_episode = newEpisodeList[0];
-                            newShow.last_episode = newEpisodeList[newEpisodeList.length - 1];
-                        }
+    //                     // console.log(JSON.stringify(newEpisodeList));
+    //                     if (newEpisodeList.length > 0) {
+    //                         newShow.first_episode = newEpisodeList[0];
+    //                         newShow.last_episode = newEpisodeList[newEpisodeList.length - 1];
+    //                     }
 
-                        let unseen_count = 0;
-                        for (let i = 0; i < newEpisodeList.length; i++) {
-                            if (!newShow.previous_episode &&
-                                !!newEpisodeList[i].local_showtime &&
-                                newEpisodeList[i].local_showtime >= today) {
-                                if (i > 0) {
-                                    newShow.previous_episode = newEpisodeList[i - 1];
-                                }
+    //                     let unseen_count = 0;
+    //                     for (let i = 0; i < newEpisodeList.length; i++) {
+    //                         if (!newShow.previous_episode &&
+    //                             !!newEpisodeList[i].local_showtime &&
+    //                             newEpisodeList[i].local_showtime >= today) {
+    //                             if (i > 0) {
+    //                                 newShow.previous_episode = newEpisodeList[i - 1];
+    //                             }
 
-                                newShow.next_episode = newEpisodeList[i];
-                            }
+    //                             newShow.next_episode = newEpisodeList[i];
+    //                         }
 
-                            if (i > 0) {
-                                newEpisodeList[i].previous_id = newEpisodeList[i - 1].episode_id;
-                            }
+    //                         if (i > 0) {
+    //                             newEpisodeList[i].previous_id = newEpisodeList[i - 1].episode_id;
+    //                         }
 
-                            if (i <= newEpisodeList.length - 2) {
-                                newEpisodeList[i].next_id = newEpisodeList[i + 1].episode_id;
-                            }
-                            if (!!existing_show.episode_list) {
-                                if (!!existing_show.episode_list[newEpisodeList[i].episode_id]) {
-                                    newEpisodeList[i].seen = existing_show.episode_list[newEpisodeList[i].episode_id].seen;
-                                } else {
-                                    for (const oldKey in existing_show.episode_list) {
-                                        if (existing_show.episode_list.hasOwnProperty(oldKey)) {
-                                            const oldEpisode = existing_show.episode_list[oldKey];
-                                            if (oldEpisode.season === newEpisodeList[i].season &&
-                                                oldEpisode.number === newEpisodeList[i].number &&
-                                                oldEpisode.name.toLowerCase() === newEpisodeList[i].name.toLowerCase()) {
-                                                newEpisodeList[i].seen = oldEpisode.seen;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (!!newEpisodeList[i].local_showtime && newEpisodeList[i].local_showtime < today && !newEpisodeList[i].seen) {
-                                unseen_count++;
-                            }
-                        }
-                        newShow.unseen_count = unseen_count;
-                        // console.log('AddUpdateShow',newShow,newEpisodeList);
-                        return this.DeleteEpisodeList(show_id).then(() => {
-                            return this.SaveShow(newShow).then(show_status => {
-                                return this.SaveEpisodeList(newEpisodeList).then( episode_status => {
-                                    newShow.episode_list = newShow.episode_list || {};
-                                    newEpisodeList.forEach(episode => {
-                                        newShow.episode_list[episode.episode_id] = episode;
-                                    });
-                                    this.notifySvc.AddShowNotifications(newShow).then( (cnt) => {
-                                        console.log('AddNotifications Added', cnt);
-                                    });
+    //                         if (i <= newEpisodeList.length - 2) {
+    //                             newEpisodeList[i].next_id = newEpisodeList[i + 1].episode_id;
+    //                         }
+    //                         if (!!existing_show.episode_list) {
+    //                             if (!!existing_show.episode_list[newEpisodeList[i].episode_id]) {
+    //                                 newEpisodeList[i].seen = existing_show.episode_list[newEpisodeList[i].episode_id].seen;
+    //                             } else {
+    //                                 for (const oldKey in existing_show.episode_list) {
+    //                                     if (existing_show.episode_list.hasOwnProperty(oldKey)) {
+    //                                         const oldEpisode = existing_show.episode_list[oldKey];
+    //                                         if (oldEpisode.season === newEpisodeList[i].season &&
+    //                                             oldEpisode.number === newEpisodeList[i].number &&
+    //                                             oldEpisode.name.toLowerCase() === newEpisodeList[i].name.toLowerCase()) {
+    //                                             newEpisodeList[i].seen = oldEpisode.seen;
+    //                                             break;
+    //                                         }
+    //                                     }
+    //                                 }
+    //                             }
+    //                         }
+    //                         if (!!newEpisodeList[i].local_showtime && newEpisodeList[i].local_showtime < today && !newEpisodeList[i].seen) {
+    //                             unseen_count++;
+    //                         }
+    //                     }
+    //                     newShow.unseen_count = unseen_count;
+    //                     // console.log('AddUpdateShow',newShow,newEpisodeList);
+    //                     return this.DeleteEpisodeList(show_id).then(() => {
+    //                         return this.SaveShow(newShow).then(show_status => {
+    //                             return this.SaveEpisodeList(newEpisodeList).then( episode_status => {
+    //                                 newShow.episode_list = newShow.episode_list || {};
+    //                                 newEpisodeList.forEach(episode => {
+    //                                     newShow.episode_list[episode.episode_id] = episode;
+    //                                 });
+    //                                 this.notifySvc.AddShowNotifications(newShow).then( (cnt) => {
+    //                                     console.log('AddNotifications Added', cnt);
+    //                                 });
 
-                                    return Promise.resolve(newShow);
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        }
-    }
+    //                                 return Promise.resolve(newShow);
+    //                             });
+    //                         });
+    //                     });
+    //                 });
+    //             });
+    //         });
+    //     }
+    // }
 
     UpdateAllShowReference() {
         console.log('Updating All Show Reference');
@@ -694,13 +695,13 @@ export class ShowsService {
 
                     let updated = 0;
                     to_update.forEach((showid, idx) => {
-                        this.AddUpdateShow(showid, 'tvmaze').then(show => {
-                            updated++;
-                            if (updated === to_update.length) {
-                                this.SetBadgeStatus();
-                                return Promise.resolve(updated);
-                            }
-                        });
+                        // this.AddUpdateShow(showid, 'tvmaze').then(show => {
+                        //     updated++;
+                        //     if (updated === to_update.length) {
+                        //         this.SetBadgeStatus();
+                        //         return Promise.resolve(updated);
+                        //     }
+                        // });
                     });
                     if (to_update.length === 0) {
                         return Promise.resolve(0);

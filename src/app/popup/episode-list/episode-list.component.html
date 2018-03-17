@@ -1,0 +1,13 @@
+<!-- Episode Output -->
+<div class="row">
+    <div class="col pl-0 pr-0">
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-outline-dark btn-sm" role="button" title="Close" (click)="displayEpisode = 'closed-x'; displayShows_x = 'open-x';">
+                <i class="fa fa-sign-out fa-lg" data-fa-transform="rotate-180"></i>
+            </a>
+        </div>
+        <div class="ShowListContainer">
+            <tvq-episode-list [show]="selectedShow"></tvq-episode-list>
+        </div>
+    </div>
+</div>

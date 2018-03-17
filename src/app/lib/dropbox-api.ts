@@ -174,8 +174,6 @@ export class Dropbox {
         });
     }
 
-
-
     private onreadystatechange(ev: Event, resolve, reject) {
         const req = <XMLHttpRequest>ev.target;
         if (req.readyState === XMLHttpRequest.DONE) {

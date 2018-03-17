@@ -1,0 +1,29 @@
+<!-- Search Output -->
+<div class="row my-2">
+    <div class="col d-flex justify-content-between px-0">
+        <label class="sr-only" for="inlineFormInput">Search</label>
+        <div class="input-group">
+            <div class="input-group-addon form-control-sm">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+            <input type="search" class="form-control form-control-sm" placeholder="Search TV Show names" />
+        </div>
+        <span class="ml-1">
+            <a class="btn btn-outline-dark btn-sm" role="button" title="Close search" (click)="redirect()">
+                <i class="fa fa-sign-in fa-lg"></i>
+            </a>
+        </span>
+    </div>
+</div>
+<div class="row" >
+    <div class="col pl-0 pr-0">
+        <div class="d-flex justify-content-center" *ngIf="!searchList || searchList.length == 0">
+            Type TV Show name in search bar and press enter.
+        </div>
+        <div class="ShowListContainer" *ngIf="!!searchList && searchList.length > 0">
+            <div *ngFor="let search of searchList">
+                <tvq-search-summary [searchModel]="search"></tvq-search-summary>
+            </div>
+        </div>
+    </div>
+</div>

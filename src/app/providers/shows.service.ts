@@ -8,8 +8,7 @@ import { CommonService } from './common.service';
 import { IDXDataManipulationService } from './indexed-db.service';
 import { LoggerService } from './logger.service';
 import { SettingsService } from './settings.service';
-
-const mytvdb = require('../../assets/tv-watchlist-db.json');
+import { rendererTypeName } from '@angular/compiler';
 
 const EndedRegex = /Pilot.?Rejected|Cancell?ed\/Ended|Cancell?ed|Ended/i;
 
@@ -22,16 +21,18 @@ export class ShowsService {
     timer_id: any;
     constructor(
         private datePipe: DatePipe,
+        private http: Http,
         private dmlSvc: IDXDataManipulationService,
         private loggerSvc: LoggerService,
         private settingSvc: SettingsService,
         private cmnSvc: CommonService) { }
 
+    getDB():Observable<{}>{
+        return this.http.get('../../assets/tv-watchlist-db.json').map(resp=> resp.json());
+    }
+
     getShowList(): Observable<ShowModel[]> {
-        return Observable.create((observer) => {
-            observer.next(mytvdb.show_list);
-            observer.complete();
-        });
+        return this.getDB().map(data => data['show_list']);
     }
 
     nextShowTime(show: ShowModel) {

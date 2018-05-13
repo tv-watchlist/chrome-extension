@@ -178,8 +178,8 @@ export class IDXDataDefinitionService {
               }
             }
 
-            // should not close db once upgrade is over
-            // since if called then success is not called and error is invoked.
+            // should not close db once upgrade is over.
+            // if invoked then success is not called and error is thrown.
             // dont put resolve here since its not the end yet
             //// db.close();
             //// resolve(1)

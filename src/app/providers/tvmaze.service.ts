@@ -117,8 +117,7 @@ export class TvMazeService {
             const country: {name?: string, code?: string, timezone?: string} = channel.country || {};
             _show.channel = {
                 name: channel.name,
-                image: null,
-                
+                image: null
             };
             _show.country = {
                 name: country.name || '',
@@ -246,7 +245,7 @@ export class TvMazeService {
         });
     }
 
-    Update() {
-        return this.tm.Update();
+    getUpdate() {
+        return this.tm.getUpdate();
     }
 }

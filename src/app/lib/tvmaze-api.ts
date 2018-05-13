@@ -75,7 +75,7 @@ export class TvMaze {
         return epsisodes;
     }
 
-    Update(): Observable<{[Id: string]: number}>{
+    getUpdate(): Observable<{[Id: string]: number}>{
         return Observable.ajax({
             method: 'GET',
             url: `http://api.tvmaze.com/updates/shows`,

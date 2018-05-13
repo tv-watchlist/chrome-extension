@@ -1,7 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ShowModel, EpisodeModel, Settings } from '../models';
 
 import { CommonService } from './common.service';
@@ -28,11 +29,11 @@ export class ShowsService {
         private cmnSvc: CommonService) { }
 
     getDB():Observable<{}>{
-        return this.http.get('../../assets/tv-watchlist-db.json').map(resp=> resp.json());
+        return this.http.get('../../assets/tv-watchlist-db.json').pipe(map(resp=> resp.json()));
     }
 
     getShowList(): Observable<ShowModel[]> {
-        return this.getDB().map(data => data['show_list']);
+        return this.getDB().pipe(map(data => data['show_list']));
     }
 
     nextShowTime(show: ShowModel) {

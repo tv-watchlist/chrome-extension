@@ -1,22 +1,7 @@
-import { Observable } from 'rxjs/Observable';
-import { AjaxResponse, AjaxError } from 'rxjs/observable/dom/AjaxObservable';
-import 'rxjs/add/observable/dom/ajax';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/concat';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/forkJoin';
 
-
+import { throwError as observableThrowError, of as observableOf,  Observable, empty as observableEmpty, forkJoin } from 'rxjs';
+import { map, mergeMap, flatMap, catchError } from 'rxjs/operators';
+import { ajax as observableAjax, AjaxResponse, AjaxError } from 'rxjs/ajax';
 
 export class TheTvDbAPI {
     // for examples look below url
@@ -39,35 +24,37 @@ export class TheTvDbAPI {
     }
 
     private getToken() {
-        const login = Observable.ajax({'method': 'POST',
+        const login = observableAjax({'method': 'POST',
                 'url': 'https://api.thetvdb.com/login',
                 'headers': { 'Content-Type': 'application/json',
                              'Accept': `application/vnd.thetvdb.${this.ApiVersion}` },
                 'body': { apikey: this.apiKey }
-            })
-            .map((res: AjaxResponse) => {
-                const token: string = res.response['token'];
-                const jwt = this.parseJwt(token); // {exp: 1499300429, id: "TV WatchList", orig_iat: 1499214029}
-                localStorage['TheTvDb_token'] = token;
-                localStorage['TheTvDb_expiry'] = jwt.exp * 1000;
-                return token;
-            })
-            .catch((error: any) => this.handleError(error));
+                }).pipe(
+                    map((res: AjaxResponse) => {
+                        const token: string = res.response['token'];
+                        const jwt = this.parseJwt(token); // {exp: 1499300429, id: "TV WatchList", orig_iat: 1499214029}
+                        localStorage['TheTvDb_token'] = token;
+                        localStorage['TheTvDb_expiry'] = jwt.exp * 1000;
+                        return token;
+                    }),
+                    catchError((error: any) => this.handleError(error))
+                );
 
-        const refresh_token = Observable.ajax({'method': 'GET',
+        const refresh_token = observableAjax({'method': 'GET',
                 'url': 'https://api.thetvdb.com/refresh_token',
                 'headers': { 'Content-Type': 'application/json',
                              'Authorization': `Bearer ${localStorage['TheTvDb_token']}`,
                              'Accept': `application/vnd.thetvdb.${this.ApiVersion}` },
-            })
-            .map((res: AjaxResponse) => {
-                const token: string = res.response['token'];
-                const jwt = this.parseJwt(token); // {exp: 1499300429, id: "TV WatchList", orig_iat: 1499214029}
-                localStorage['TheTvDb_token'] = token;
-                localStorage['TheTvDb_expiry'] = jwt.exp * 1000;
-                return token;
-            })
-            .catch((error: any) => this.handleError(error));
+                }).pipe(
+                    map((res: AjaxResponse) => {
+                        const token: string = res.response['token'];
+                        const jwt = this.parseJwt(token); // {exp: 1499300429, id: "TV WatchList", orig_iat: 1499214029}
+                        localStorage['TheTvDb_token'] = token;
+                        localStorage['TheTvDb_expiry'] = jwt.exp * 1000;
+                        return token;
+                    }),
+                    catchError((error: any) => this.handleError(error))
+                );
 
         const expiry = localStorage['TheTvDb_expiry'];
         if (!!expiry) {
@@ -82,7 +69,7 @@ export class TheTvDbAPI {
                 return refresh_token;
             } else {
                 // return saved token
-                return Observable.of(localStorage['TheTvDb_token']);
+                return observableOf(localStorage['TheTvDb_token']);
             }
         } else {
             return login;
@@ -95,7 +82,7 @@ export class TheTvDbAPI {
             localStorage.removeItem('TheTvDb_token');
             localStorage.removeItem('TheTvDb_expiry');
         }
-        return Observable.throw(error.message || 'Server Error');
+        return observableThrowError(error.message || 'Server Error');
     }
 
     private hasNextPage(response) {
@@ -103,41 +90,52 @@ export class TheTvDbAPI {
     }
 
     getUpdates(fromUnixTimestamp: number): Observable<{[id: string]: number}> { // , toUnixTimestamp: number
-        const ob = this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
+        return this.getToken()
+        .pipe(
+                mergeMap(token => observableAjax({'method': 'GET',
                          'url': `https://api.thetvdb.com/updated/query?fromTime=${fromUnixTimestamp}`,
                          'responseType': 'json',
                          'headers': { 'Content-Type': 'application/json',
                              'Authorization': `Bearer ${token}`,
                              'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
                              'Accept-Language': 'en' }
-                         }))
-                         .map((aRes: AjaxResponse) => aRes.response.data)
-                         .catch((error: any) => this.handleError(error));
-
-        return ob.map((updates: {id: string, lastUpdated: number}[]) => {
-            const hash: {[id: string]: number} = {};
-            updates.forEach(element => {
-                hash[element.id] = element.lastUpdated;
-            });
-            return hash;
-        });
+                        })
+                        .pipe(
+                            map((aRes: AjaxResponse) => aRes.response.data),
+                            catchError((error: any) => this.handleError(error))
+                        )
+                ),
+                map((updates: {id: string, lastUpdated: number}[]) => {
+                    const hash: {[id: string]: number} = {};
+                    updates.forEach(element => {
+                        hash[element.id] = element.lastUpdated;
+                    });
+                    return hash;
+                })      
+        );
     }
 
     getSeries(series_id: number): Observable<TheTvDbSeries> {
-        const ob = this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
+        return this.getToken()
+        .pipe(
+                mergeMap(token => observableAjax({'method': 'GET',
                          'url': `https://api.thetvdb.com/series/${series_id}`,
                          'responseType': 'json',
                          'headers': { 'Content-Type': 'application/json',
                              'Authorization': `Bearer ${token}`,
                              'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
                              'Accept-Language': 'en' }
-                         }))
-                         .map((aRes: AjaxResponse) => aRes.response.data)
-                         .catch((error: any) => this.handleError(error));
-        return ob.map(data => {
-            data.banner = this.imagePrefix + data.banner;
-            return data;
-        });
+                        })
+                        .pipe(
+                            map((aRes: AjaxResponse) => aRes.response.data),
+                            catchError((error: any) => this.handleError(error))
+                        )
+                ),       
+                map(data => {
+                    data.banner = this.imagePrefix + data.banner;
+                    return data;
+                })
+        );
     }
 
     searchSeries(query: {name?: string, imdbId?: string, zap2itId?: string}): Observable<TheTvDbSearch[]> {
@@ -149,25 +147,28 @@ export class TheTvDbAPI {
                 concat = '&';
             }
         }
-        const ob: Observable<TheTvDbSearch[]> = this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
+        return this.getToken()
+        .pipe(
+            mergeMap(token => observableAjax({'method': 'GET',
                          'url': url,
                          'responseType': 'json',
                          'headers': { 'Content-Type': 'application/json',
                              'Authorization': `Bearer ${token}`,
                              'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
                              'Accept-Language': 'en' }
-                         }))
-                         .map((res: AjaxResponse) => res.response.data)
-                         .catch((error: any) => this.handleError(error));
-
-        return ob.map(searches => {
-            searches.forEach(element => {
-                if(!!element.banner){
-                    element.banner = this.imagePrefix + element.banner;
-                }
-            });
-            return searches;
-        });
+                         }).pipe(
+                            map((res: AjaxResponse) => res.response.data),
+                            catchError((error: any) => this.handleError(error))
+                         )),
+            map(searches => {
+                searches.forEach(element => {
+                    if(!!element.banner){
+                        element.banner = this.imagePrefix + element.banner;
+                    }
+                });
+                return searches;
+            })
+        );
     }
 
     getPagedEpisodes(series_id: number, page?: number): Observable<TheTvDbEpisode[]>  {
@@ -175,33 +176,38 @@ export class TheTvDbAPI {
         if (page !== null) {
             url += `?page=${page}`;
         } else {
-            return Observable.empty();
+            return observableEmpty();
         } //121361
-        return this.getToken().mergeMap(token => Observable.ajax({
-            'method': 'GET',
-            'url': url,
-            'responseType': 'json',
-            'headers': { 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
-                'Accept-Language': 'en' }
-            }))
-            .flatMap((res: AjaxResponse) => {
-                if (res.response && res.response.links && res.response.links.next) {
-                    console.log('hasNextPage', res.response);
-                    return Observable.forkJoin(Observable.of(res.response.data), 
-                                            this.getPagedEpisodes(series_id, res.response.links.next)).map(x => {
-                        let combined = x[0].concat(x[1]);
-                        return combined
-                    });
-                }
-                if(!!res.response.data) {
-                    return Observable.of(res.response.data);
-                }
-                  
-                return [];
-            })
-            .catch((error: any) => this.handleError(error));
+        return this.getToken()
+        .pipe(
+            mergeMap(token => observableAjax({'method': 'GET',
+                    'url': url,
+                    'responseType': 'json',
+                    'headers': { 'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
+                        'Accept-Language': 'en' }
+                    }).pipe(
+                        flatMap((res: AjaxResponse) => {
+                            if (res.response && res.response.links && res.response.links.next) {
+                                console.log('hasNextPage', res.response);
+                                return forkJoin(observableOf(res.response.data), 
+                                    this.getPagedEpisodes(series_id, res.response.links.next)).pipe(
+                                        map(x => {
+                                            let combined = x[0].concat(x[1]);
+                                            return combined
+                                        })  
+                                    );
+                            }
+                            if(!!res.response.data) {
+                                return observableOf(res.response.data);
+                            }
+                              
+                            return [];
+                        }),
+                        catchError((error: any) => this.handleError(error))
+            ))
+        )
     }
 
     getEpisodes(series_id: number): Observable<TheTvDbEpisode[]> {
@@ -209,67 +215,59 @@ export class TheTvDbAPI {
     }
 
     getFanart(series_id: number): Observable<TheTvDbImage[]>  {
-        const ob: Observable<TheTvDbImage[]> = this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
-                         'url': `https://api.thetvdb.com/series/${series_id}/images/query?keyType=fanart`,
-                         'responseType': 'json',
-                         'headers': {'Content-Type': 'application/json',
-                                     'Authorization': `Bearer ${token}`,
-                                     'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
-                                     'Accept-Language': 'en'}
-                         }))
-                         .map((res: AjaxResponse) => res.response.data)
-                         .catch((error: any) => this.handleError(error));
-        return ob.map(images => {
-            images.forEach(element => {
-                if(!!element.fileName) {
-                    element.fileName = this.imagePrefix + element.fileName;
-                }
-                if(!!element.thumbnail) {
-                    element.thumbnail = this.imagePrefix + element.thumbnail;
-                }
-            });
-            return images;
-        });
+        return this.getImage(`https://api.thetvdb.com/series/${series_id}/images/query?keyType=fanart`);
     }
 
     getPoster(series_id: number): Observable<TheTvDbImage[]>  {
-        const ob = this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
-                         'url': `https://api.thetvdb.com/series/${series_id}/images/query?keyType=poster`,
+        return this.getImage(`https://api.thetvdb.com/series/${series_id}/images/query?keyType=poster`);
+    }
+
+    private getImage(url: string){
+        return this.getToken().pipe(
+            mergeMap(token => observableAjax({'method': 'GET',
+                         'url': url,
                          'responseType': 'json',
                          'headers': {'Content-Type': 'application/json',
                                      'Authorization': `Bearer ${token}`,
                                      'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
                                      'Accept-Language': 'en'}
-                         }))
-                         .map((res: AjaxResponse) => res.response.data)
-                         .catch((error: any) => this.handleError(error));
-
-        return ob.map(images => {
-            images.forEach(element => {
-                if(!!element.fileName) {
-                    element.fileName = this.imagePrefix + element.fileName;
-                }
-                if(!!element.thumbnail) {
-                    element.thumbnail = this.imagePrefix + element.thumbnail;
-                }
-            });
-            return images;
-        });
+                         }).pipe(
+                            map((res: AjaxResponse) => res.response.data),
+                            catchError((error: any) => this.handleError(error))
+                         )
+            ),
+            map(images => {
+                images.forEach(element => {
+                    if(!!element.fileName) {
+                        element.fileName = this.imagePrefix + element.fileName;
+                    }
+                    if(!!element.thumbnail) {
+                        element.thumbnail = this.imagePrefix + element.thumbnail;
+                    }
+                });
+                return images;
+            })
+        );
     }
 
     getBanner(series_id: number): Observable<string>  {
-        const ob = this.getToken().mergeMap(token => Observable.ajax({'method': 'GET',
+        return this.getToken().pipe(
+            mergeMap(token => observableAjax({'method': 'GET',
                          'url': `https://api.thetvdb.com/series/${series_id}/filter?keys=banner`,
                          'responseType': 'json',
                          'headers': {'Content-Type': 'application/json',
                                      'Authorization': `Bearer ${token}`,
                                      'Accept': `application/vnd.thetvdb.${this.ApiVersion}`,
                                      'Accept-Language': 'en'}
-                         }))
-                         .map((res: AjaxResponse) => res.response.data)
-                         .catch((error: any) => this.handleError(error));
-        return ob.map(data => this.imagePrefix + data.banner);
+                         }).pipe(
+                            map((res: AjaxResponse) => res.response.data),
+                            catchError((error: any) => this.handleError(error))
+                         )
+            ),
+            map(data => this.imagePrefix + data.banner)
+        );
     }
+    
 }
 
 export interface TheTvDbSeries {

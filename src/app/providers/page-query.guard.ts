@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Routes, RouterModule , CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot ,Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class PageQueryGuard implements CanActivate {

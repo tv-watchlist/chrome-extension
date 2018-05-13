@@ -9,7 +9,7 @@ import { OptionsComponent } from './options/options.component';
 import { BackgroundComponent } from './background/background.component';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found.component';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PageQueryGuard } from './providers/page-query.guard';
 import { SettingsComponent } from './options/settings/settings.component';
 import { HelpComponent } from './options/help/help.component';

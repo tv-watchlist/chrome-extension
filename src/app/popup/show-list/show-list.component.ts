@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ActivatedRoute ,Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Headers, Http } from '@angular/http';

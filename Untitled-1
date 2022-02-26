@@ -1,0 +1,148 @@
+https://api.themoviedb.org/3/configuration?api_key=1313d18d670b66715fb862d8eff63c5c
+{
+  "images": {
+    "base_url": "http://image.tmdb.org/t/p/",
+    "secure_base_url": "https://image.tmdb.org/t/p/",
+    "backdrop_sizes": [
+      "w300",
+      "w780",
+      "w1280",
+      "original"
+    ],
+    "logo_sizes": [
+      "w45",
+      "w92",
+      "w154",
+      "w185",
+      "w300",
+      "w500",
+      "original"
+    ],
+    "poster_sizes": [
+      "w92",
+      "w154",
+      "w185",
+      "w342",
+      "w500",
+      "w780",
+      "original"
+    ],
+    "profile_sizes": [
+      "w45",
+      "w185",
+      "h632",
+      "original"
+    ],
+    "still_sizes": [
+      "w92",
+      "w185",
+      "w300",
+      "original"
+    ]
+  },
+  "change_keys": [
+    "adult",
+    "air_date",
+    "also_known_as",
+    "alternative_titles",
+    "biography",
+    "birthday",
+    "budget",
+    "cast",
+    "certifications",
+    "character_names",
+    "created_by",
+    "crew",
+    "deathday",
+    "episode",
+    "episode_number",
+    "episode_run_time",
+    "freebase_id",
+    "freebase_mid",
+    "general",
+    "genres",
+    "guest_stars",
+    "homepage",
+    "images",
+    "imdb_id",
+    "languages",
+    "name",
+    "network",
+    "origin_country",
+    "original_name",
+    "original_title",
+    "overview",
+    "parts",
+    "place_of_birth",
+    "plot_keywords",
+    "production_code",
+    "production_companies",
+    "production_countries",
+    "releases",
+    "revenue",
+    "runtime",
+    "season",
+    "season_number",
+    "season_regular",
+    "spoken_languages",
+    "status",
+    "tagline",
+    "title",
+    "translations",
+    "tvdb_id",
+    "tvrage_id",
+    "type",
+    "video",
+    "videos"
+  ]
+}
+https://image.tmdb.org/t/p/w300/9ijMGlJKqcslswWUzTEwScm82Gs.jpg
+https://image.tmdb.org/t/p/w300/dKH2l6WrrYS3tGp4JD3Y0AtVzPu.jpg
+
+https://api.themoviedb.org/3/search/tv?api_key=1313d18d670b66715fb862d8eff63c5c&language=en-US&page=1&query=mandalorian&include_adult=false
+{
+  "page": 1,
+  "results": [
+    {
+      "backdrop_path": "/9ijMGlJKqcslswWUzTEwScm82Gs.jpg",
+      "first_air_date": "2019-11-12",
+      "genre_ids": [
+        10765,
+        10759
+      ],
+      "id": 82856,
+      "name": "The Mandalorian",
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "The Mandalorian",
+      "overview": "After the fall of the Galactic Empire, lawlessness has spread throughout the galaxy. A lone gunfighter makes his way through the outer reaches, earning his keep as a bounty hunter.",
+      "popularity": 1866.12,
+      "poster_path": "/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg",
+      "vote_average": 8.5,
+      "vote_count": 4321
+    },
+    {
+      "backdrop_path": "/dKH2l6WrrYS3tGp4JD3Y0AtVzPu.jpg",
+      "first_air_date": "2020-05-04",
+      "genre_ids": [
+        99
+      ],
+      "id": 101978,
+      "name": "Disney Gallery: The Mandalorian",
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "Disney Gallery: The Mandalorian",
+      "overview": "Executive producer Jon Favreau invites the cast and crew of The Mandalorian to share an unprecedented look at the making of the series. Each chapter explores a different facet of the first live-action Star Wars television show through interviews, never-before-seen footage, and roundtable conversations hosted by Favreau himself.",
+      "popularity": 107.434,
+      "poster_path": "/6Hc2eHp59iTyMqkhcumNovq2l6y.jpg",
+      "vote_average": 7.2,
+      "vote_count": 12
+    }
+  ],
+  "total_pages": 1,
+  "total_results": 2
+}

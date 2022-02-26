@@ -1,10 +1,80 @@
-
+///The Model in this page is used for UI
 export type Days = 'Monday'|'Tuesday'|'Wednesday'|'Thursday'|'Friday'|'Saturday'|'Sunday';
+
+export class ShowModel {
+    show_id = '';
+    name = '';
+    api_source: string;
+    api_id: {
+        tvmaze?: number;
+        thetvdb?: number;
+        imdb?: string;
+        zap2it?: string;
+        trakt?: string|number;
+        tmdb?: string|number;
+    } = {};
+    url = '';
+    airtime = '';
+    genres: string[] = [];
+    status = '';// (Running, Ended, To Be Determined, In Development)
+    runtime: number = 0;
+    premiered = '';
+    summary = '';
+    schedule: {
+        time? : string;
+        days? : Days[];
+    } = {};
+    channel: {
+        name?: string,
+        image?: string,
+    } = {};
+    country: {
+        name?: string,
+        code?: string,
+        timezone?: string
+    } = {};
+    //language = '';
+    image: {
+        banner?: string[];
+        poster?: string[];
+    } = {};
+}
+
+export class UserShowModel {
+    show_id: string;
+    api_source: string;
+    api_id: {
+        tvmaze?: number;
+        thetvdb?: number;
+        imdb?: string;
+        zap2it?: string;
+        trakt?: string|number;
+        tmdb?: string|number;
+    } = {};
+    name: string;
+    next_update_time: number;
+    total_episodes: number;
+    unseen_count: number;
+
+    first_episode: EpisodeModel;
+    previous_episode: EpisodeModel;
+    next_episode: EpisodeModel;
+    last_episode: EpisodeModel;
+}
 
 export class EpisodeModel {
     episode_id = '';
     name = '';
     show_id = '';
+    api_source = '';
+    api_id: {
+        tvmaze?: number;
+        thetvdb?: number;
+        imdb?: string;
+        zap2it?: string;
+        trakt?: string|number;
+        tmdb?: string|number;
+    } = {};
     /** airdate manipulated javascript Date */
     local_showtime: number = 0;
     /**
@@ -28,7 +98,12 @@ export class EpisodeModel {
         poster?: string[];
     } = {};
     content_rating = '';
-    //language = '';
+}
+
+export class UserEpisodeModel {
+    episode_id = '';
+    name = '';
+    show_id = '';
     api_source = '';
     api_id: {
         tvmaze?: string|number;
@@ -39,58 +114,16 @@ export class EpisodeModel {
         trakt?: string|number;
         tmdb?: string|number;
     } = {};
+
+    seen: boolean = false;
+
     previous_id = '';
     next_id = '';
-    seen: boolean = false;
-}
-
-export class ShowModel {
-    show_id = '';
-    name = '';
-    url = '';
-    airtime = '';
-    genres: string[] = [];
-    status = '';// (Running, Ended, To Be Determined, In Development)
-    runtime: number = 0;
-    premiered = '';
-    summary = '';
-    schedule: {
-        time? : string;
-        days? : Days[];
-    } = {};
-    channel: {
-        name?: string,
-        image?: string,
-    } = {};
-    country: {
-        name?: string,
-        code?: string,
-        timezone?: string
-    } = {};
-    api_source = '';
-    api_id: {
-        tvmaze?: number;
-        thetvdb?: number;
-        imdb?: string;
-        zap2it?: string;
-        trakt?: string|number;
-        tmdb?: string|number;
-    } = {};
-    image: {
-        banner?: string[];
-        poster?: string[];
-    } = {};
-
-    next_update_time: number = 0;
-    total_episodes: number = 0;
-    unseen_count: number = 0;
-    first_episode: EpisodeModel;
-    previous_episode: EpisodeModel;
-    next_episode: EpisodeModel;
-    last_episode: EpisodeModel;
 }
 
 export class ShowEpisodeModel {
     show: ShowModel;
-    episode_list: EpisodeModel[];
+    userShow: UserShowModel;
+    episodeList: EpisodeModel[];
+    userEpisodeList: { [episode_id: string]: UserEpisodeModel};
 }

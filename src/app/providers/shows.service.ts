@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ShowModel, EpisodeModel, Settings } from '../models';
+import { ShowEpisodeModel, ShowModel, UserShowModel, EpisodeModel, UserEpisodeModel, Settings } from '../models';
 
 import { CommonService } from './common.service';
 import { IDXDataManipulationService } from './indexed-db.service';
@@ -36,15 +36,15 @@ export class ShowsService {
         return this.getDB().pipe(map(data => data['show_list']));
     }
 
-    nextShowTime(show: ShowModel) {
+    nextShowTime(show: UserShowModel) {
         return this.cmnSvc.DaysBetweenToEnglish(new Date(), !!show.next_episode ? new Date(show.next_episode.local_showtime) : null);
     }
     // -1 = Completed, 0 = Running, 1 = TBA
-    GetShowStatus(show: ShowModel) {
-        if ((show.status || '').match(EndedRegex)) {
+    GetShowStatus(model: ShowEpisodeModel) {
+        if ((model.show.status || '').match(EndedRegex)) {
             return -1; // Completed
         }
-        const episode = show.next_episode || show.last_episode;
+        const episode = model.userShow.next_episode || model.userShow.last_episode;
         // console.log(show, episode);
         const now = new Date().getTime();
         if (!!episode && !!episode.local_showtime && episode.local_showtime > now) {
@@ -54,28 +54,28 @@ export class ShowsService {
         }
     }
 
-    GetShowStatusText(show: ShowModel, settings: Settings) {
-        const status = this.GetShowStatus(show);
+    GetShowStatusText(model: ShowEpisodeModel, settings: Settings) {
+        const status = this.GetShowStatus(model);
         let statusTxt = (status === -1) ? 'Completed' : 'TBA';
 
-        const offset_next_date = !!show.next_episode ? new Date(show.next_episode.local_showtime) : null;
-        const offset_prev_date = !!show.previous_episode ? new Date(show.previous_episode.local_showtime) : null;
-        const offset_last_date = !!show.last_episode ? new Date(show.last_episode.local_showtime) : null;
+        const offset_next_date = !!model.userShow.next_episode ? new Date(model.userShow.next_episode.local_showtime) : null;
+        const offset_prev_date = !!model.userShow.previous_episode ? new Date(model.userShow.previous_episode.local_showtime) : null;
+        const offset_last_date = !!model.userShow.last_episode ? new Date(model.userShow.last_episode.local_showtime) : null;
 
         const timezone_offset = settings.timezone_offset || {};
-        if (show.country && timezone_offset[show.country.name]) {
+        if (model.show.country && timezone_offset[model.show.country.name]) {
             if (!!offset_next_date) {
-                offset_next_date.setMinutes(offset_next_date.getMinutes() + (60 * Number(timezone_offset[show.country.name])));
+                offset_next_date.setMinutes(offset_next_date.getMinutes() + (60 * Number(timezone_offset[model.show.country.name])));
             }
             if (!!offset_prev_date) {
-                offset_prev_date.setMinutes(offset_prev_date.getMinutes() + (60 * Number(timezone_offset[show.country.name])));
+                offset_prev_date.setMinutes(offset_prev_date.getMinutes() + (60 * Number(timezone_offset[model.show.country.name])));
             }
             if (!!offset_last_date) {
-                offset_last_date.setMinutes(offset_last_date.getMinutes() + (60 * Number(timezone_offset[show.country.name])));
+                offset_last_date.setMinutes(offset_last_date.getMinutes() + (60 * Number(timezone_offset[model.show.country.name])));
             }
         }
 
-        if (status === 0 && !!show.next_episode) {
+        if (status === 0 && !!model.userShow.next_episode) {
             statusTxt = this.datePipe.transform(offset_next_date, 'EEE hh:mm a, MMM dd, y');
         }
         return statusTxt;
@@ -89,8 +89,8 @@ export class ShowsService {
         return <Promise<{[show_id: string]: ShowModel}>>this.dmlSvc.FetchAll('subscribed_shows', 'show_id');
     }
 
-    GetShowListArray(): Promise<ShowModel[]> {
-        return <Promise<ShowModel[]>>this.dmlSvc.FetchAll('subscribed_shows');
+    GetShowListArray(): Promise<UserShowModel[]> {
+        return <Promise<UserShowModel[]>>this.dmlSvc.FetchAll('user_shows');
     }
 
     GetEpisode(episode_id: string): Promise<EpisodeModel> {
@@ -238,7 +238,7 @@ export class ShowsService {
                     return Promise.resolve(show_list);
                 } else { // unseen or default airdate
                     // get future shows
-                    const future_show_list: ShowModel[] = show_list.filter(item => !!item.next_episode);
+                    const future_show_list = show_list.filter(item => !!item.next_episode);
                     // sort by asc
                     future_show_list.sort((a, b) => {
                         const x = a.next_episode.local_showtime;

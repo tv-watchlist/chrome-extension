@@ -3,10 +3,10 @@
         <div class="col">
             <form class="form-inline my-2 my-lg-0">
                 <input #searchTxt class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-success my-2 my-sm-0" type="submit" (click)="searchMaze(searchTxt.value)">Search TvMaze</button>
-                <button class="btn btn-success my-2 ml-2 my-sm-0" type="submit" (click)="searchTvDb(searchTxt.value)">Search TheTvDB</button>
-                <button class="btn btn-primary my-2 ml-2 my-sm-0" type="submit" (click)="queryMaze(searchTxt.value)">Query TvMaze</button>
-                <button class="btn btn-primary my-2 ml-2 my-sm-0" type="submit" (click)="queryTvDb(searchTxt.value)">Query TheTvDB</button>
+                <button class="btn btn-success my-2 my-sm-0" type="submit" (click)="searchMaze(searchTxt.value)">TvMaze by Name</button>
+                <button class="btn btn-success my-2 ml-2 my-sm-0" type="submit" (click)="searchTvDb(searchTxt.value)">TheTvDB by Name</button>
+                <button class="btn btn-primary my-2 ml-2 my-sm-0" type="submit" (click)="queryMaze(searchTxt.value)">TvMaze by Id</button>
+                <button class="btn btn-primary my-2 ml-2 my-sm-0" type="submit" (click)="queryTvDb(searchTxt.value)">TheTvDB by Id</button>
             </form>
         </div>
     </div>

@@ -21,6 +21,6 @@ export class OptionsComponent implements OnInit {
 
   // http://akveo.com/ng2-admin/#/pages/dashboard
   ngOnInit() {
-
+    
   }
 }

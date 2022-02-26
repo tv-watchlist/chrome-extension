@@ -5,7 +5,7 @@ import { map, catchError } from 'rxjs/operators';
 import { TheTvDbAPI, X2J } from '../lib';
 import { CommonService } from './common.service';
 
-import { ShowModel, EpisodeModel, ShowEpisodeModel, SearchModel, Days } from '../models';
+import { ShowModel, UserShowModel, EpisodeModel, UserEpisodeModel, ShowEpisodeModel, SearchModel, Days } from '../models';
 
 @Injectable()
 export class TheTvDbService {
@@ -18,41 +18,48 @@ export class TheTvDbService {
         return combineLatest(this.tvDb.getSeries(series_id), this.tvDb.getEpisodes(series_id)).pipe(
             map( show_episodelist => {
                 console.log('thetvdb show_episodelist',show_episodelist);
+
                 const model = new ShowEpisodeModel();
-                const _show = new ShowModel();
+                const showModel = new ShowModel();
+                const userShowModel = new UserShowModel();
                 const series = show_episodelist[0];
                 const EpList = show_episodelist[1];
 
-                _show.api_source = 'thetvdb';
-                _show.show_id = 'thetvdb' + series.id;
-                _show.api_id  =  {
+                showModel.api_source = 'thetvdb';
+                showModel.show_id = 'thetvdb' + series.id;
+                showModel.api_id  =  {
                     thetvdb: series.id,
                     imdb: series.imdbId,
                     zap2it: series.zap2itId
                 }
-                _show.name = series.seriesName;
-                _show.premiered = series.firstAired;
-                _show.status = series.status;
-                _show.genres = series.genre;
-                _show.summary = series.overview;
-                _show.runtime = Number.parseInt(series.runtime, 10);
-                _show.airtime = series.airsTime;
-                _show.channel = {
+                showModel.name = series.seriesName;
+                showModel.premiered = series.firstAired;
+                showModel.status = series.status;
+                showModel.genres = series.genre;
+                showModel.summary = series.overview;
+                showModel.runtime = Number.parseInt(series.runtime, 10);
+                showModel.airtime = series.airsTime;
+                showModel.channel = {
                     name:series.network
                 };
-                _show.schedule = {
+                showModel.schedule = {
                     days: <Days[]>series.airsDayOfWeek.split(','), 
                     time: series.airsTime 
                 };
-                _show.image = {
+                showModel.image = {
                     banner:[series.banner]
                 }
-                _show.url = '';
+                showModel.url = '';
+
+                userShowModel.show_id = showModel.show_id;
+                userShowModel.name = showModel.name;
+                userShowModel.api_source = showModel.api_source;
+                userShowModel.api_id = showModel.api_id;
 
                 //series.rating
                 let episode_list = EpList.map(Ep => {
                     const episode = new EpisodeModel();
-                    episode.show_id = _show.show_id;
+                    episode.show_id = showModel.show_id;
                 
                     episode.api_source = 'thetvdb';
                     episode.api_id = {thetvdb: Ep.id};
@@ -60,12 +67,12 @@ export class TheTvDbService {
                     episode.url = '';
                     episode.airdate = Ep.firstAired;
                     
-                    episode.runtime = _show.runtime;
+                    episode.runtime = showModel.runtime;
                     episode.season = Ep.airedSeason;
                     episode.number = Ep.airedEpisodeNumber || 0;
                     episode.summary = Ep.overview;
                     episode.counter = Ep.absoluteNumber;
-                    episode.local_showtime = !!episode.airdate ? this.cmnSvc.ParseDate(episode.airdate , _show.airtime).getTime() : 0;
+                    episode.local_showtime = !!episode.airdate ? this.cmnSvc.ParseDate(episode.airdate , showModel.airtime).getTime() : 0;
 
                     if(Ep.absoluteNumber !== null) {
                         episode.special = false;
@@ -83,7 +90,7 @@ export class TheTvDbService {
                 });
                 known_episode_list.sort(this.cmnSvc.multipleDynamicSort(['local_showtime','season','number']));
                 let init_season = known_episode_list.length > 0 ? known_episode_list[0].season : 1 ;
-                let clean_episode_list = [];
+                let clean_episode_list: EpisodeModel[] = [];
 
                 //move episode without datetime for same season on end.
                 known_episode_list.forEach((ep, idx, episodeArray) => {
@@ -103,49 +110,58 @@ export class TheTvDbService {
                 let normal_counter = 0;
                 let special_counter = 0;
                 let today = new Date();
+                model.userEpisodeList = {};
                 clean_episode_list.forEach((episode, i) => {
                     //set episode_id
                     if(!episode.special) {
                         episode.counter = ++normal_counter;
-                        episode.episode_id = _show.show_id + "_" + this.cmnSvc.ZeroPad(episode.season, 4) + "_" +  
+                        episode.episode_id = showModel.show_id + "_" + this.cmnSvc.ZeroPad(episode.season, 4) + "_" +  
                             this.cmnSvc.ZeroPad(episode.number, 4) + "_" +  this.cmnSvc.ZeroPad(episode.counter,4);
                         last_number = episode.number;
                     } else {
                         episode.counter = ++special_counter;
-                        episode.episode_id = _show.show_id + "_" + this.cmnSvc.ZeroPad(episode.season, 4) + "_" + 
+                        episode.episode_id = showModel.show_id + "_" + this.cmnSvc.ZeroPad(episode.season, 4) + "_" + 
                         this.cmnSvc.ZeroPad(last_number, 4) + "_S" + this.cmnSvc.ZeroPad(episode.counter, 4);
                     }
 
+                    model.userEpisodeList[episode.episode_id] = new UserEpisodeModel();
+                    model.userEpisodeList[episode.episode_id].show_id = episode.show_id;                    
+                    model.userEpisodeList[episode.episode_id].episode_id = episode.episode_id;
+                    model.userEpisodeList[episode.episode_id].name = episode.name;
+                    model.userEpisodeList[episode.episode_id].api_id = episode.api_id;
+                    model.userEpisodeList[episode.episode_id].api_source = episode.api_source;
+
                     //set previous_id
                     if(i > 0) {
-                        episode.previous_id = clean_episode_list[i - 1].episode_id;
+                        model.userEpisodeList[episode.episode_id].previous_id = clean_episode_list[i - 1].episode_id;
                     }
                 });
-
                 clean_episode_list.forEach((episode, i) => {
                     //set next_id
                     if(i <= clean_episode_list.length - 2) {
-                        episode.next_id = clean_episode_list[i + 1].episode_id;
+                        model.userEpisodeList[episode.episode_id].next_id = clean_episode_list[i + 1].episode_id;
                     }
-
+    
                     //set show previous_episode, next_episode
-                    if (!episode.previous_episode && !!episode.local_showtime && 
-                        episode.local_showtime >= today) {
+                    if (!userShowModel.previous_episode && !!episode.local_showtime && 
+                        episode.local_showtime >= today.getTime()) {
                         if (i > 0) {
-                            _show.previous_episode = clean_episode_list[i - 1];
+                            userShowModel.previous_episode = clean_episode_list[i - 1];
                         }
-
-                        _show.next_episode = episode;
+    
+                        userShowModel.next_episode = episode;
                     }
                 });
-
                 if (clean_episode_list.length > 0) {
-                    _show.first_episode = clean_episode_list[0];
-                    _show.last_episode = clean_episode_list[clean_episode_list.length - 1];
+                    userShowModel.first_episode = clean_episode_list[0];
+                    userShowModel.last_episode = clean_episode_list[clean_episode_list.length - 1];
                 }
-                _show.total_episodes = clean_episode_list.length;            
-                model.show = _show;
-                model.episode_list = clean_episode_list;
+                userShowModel.total_episodes = clean_episode_list.length;
+                
+                model.show = showModel;
+                model.userShow = userShowModel;
+                model.episodeList = clean_episode_list;
+
                 return model;
             })
         );
